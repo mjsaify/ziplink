@@ -1,0 +1,13 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+body {
+  background-color: #0b101b;
+}
+
+.gradient-heading {
+    background: linear-gradient(90deg, #144EE3 0%, #EB568E 19%, #A353AA 64%, #144EE3 100%);
+    background-clip: text;
+    color: transparent;
+}
