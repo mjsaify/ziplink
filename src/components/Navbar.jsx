@@ -2,11 +2,11 @@ import { CiLogin } from "react-icons/ci";
 
 const Navbar = () => {
   return (
-    <header className="container px-6 py-8">
+    <header className="container mx-auto px-12 py-8">
       <nav>
         <ul className="flex justify-between items-center">
           <li>
-            <h1 className="gradient-heading text-4xl font-semibold">ZipLink</h1>
+            <h1 className="gradient-heading text-4xl font-semibold lg:text-5xl">ZipLink</h1>
           </li>
           <li>
             <button
