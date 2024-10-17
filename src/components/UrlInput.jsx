@@ -1,4 +1,4 @@
-import { IoIosLink } from "react-icons/io";
+import { FaLink } from "react-icons/fa6";
 import { FaArrowRightLong } from "react-icons/fa6";
 import { useState } from "react";
 import { useContextProvider } from "../reducer";
@@ -26,7 +26,7 @@ const UrlInput = () => {
   return (
     <div className="mt-12 relative lg:w-1/2 mx-auto">
       <div className="absolute top-1/2 left-2 -translate-y-[50%]">
-        <IoIosLink className="w-full text-white h-full rounded-full p-2 text-2xl" />
+        <FaLink className="w-full text-white h-full rounded-full p-2 text-2xl" />
       </div>
       <form onSubmit={handleSubmit}>
         <input type="text" name="originalUrl" id="originalUrl" value={formData.url} onChange={handleChange} className="w-full p-3 pl-14 outline-none border-4 border-grey-lite bg-grey text-white rounded-full text-lg" placeholder="Enter the url here" />

@@ -15,6 +15,9 @@ export default {
   			grey: '#181e29',
   			'grey-lite': '#353C4A',
   			lite: '#C9CED6',
+			"active-link": "#00b894",
+			"inactive-link": "#ffd32a",
+			'expired-link': "#c0392b",
   			background: 'hsl(var(--background))',
   			foreground: 'hsl(var(--foreground))',
   			card: {

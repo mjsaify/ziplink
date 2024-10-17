@@ -17,9 +17,9 @@ const AppContextProvider = ({ children }) => {
                 body: JSON.stringify({ originalUrl: url }),
             });
             const response = await request.json();
+            console.log(response)
             setLoading(false);
             setUrlData([...urlData, response.url]);
-            console.log(urlData)
         } catch (error) {
             console.log(error)
         }
