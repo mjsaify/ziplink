@@ -11,15 +11,17 @@ import { useContextProvider } from "../reducer"
 
 
 const UrlTable = () => {
-    const { urlData, loading } = useContextProvider();
-    
-    const NumberToDate = (dateNumber) =>{
+    const { urlData, loading, error } = useContextProvider();
+
+    const NumberToDate = (dateNumber) => {
         const date = new Date(dateNumber);
         const formattedDate = `${date.getMonth() + 1}-${date.getDate()}-${date.getFullYear()}`;
         return formattedDate;
     }
 
-    
+    if (error) {
+        return <h1 className="text-4xl text-red-500 text-center">{error}</h1>
+    }
     if (loading) {
         return <h1 className="text-4xl text-red-500">Loading...</h1>
     }
@@ -44,7 +46,7 @@ const UrlTable = () => {
                             <TableRow key={_id}>
                                 <TableCell className="w-full p-4 text-sm flex justify-between items-center relative">
                                     {shortUrl}
-                                    <FaCopy className="cursor-pointer bg-grey-lite w-[30px] h-[30px] p-2 rounded-full absolute right-6"/>
+                                    <FaCopy className="cursor-pointer bg-grey-lite w-[30px] h-[30px] p-2 rounded-full absolute right-12" />
                                 </TableCell>
                                 <TableCell className="p-4 text-sm">{originalUrl.slice(0, 50)}</TableCell>
                                 <TableCell className="p-4 text-sm">scanner</TableCell>
