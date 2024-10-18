@@ -1,4 +1,5 @@
 import { createContext, useContext, useEffect, useState } from "react";
+import { SignupSchema } from '../utils/_types';
 
 export const AppContext = createContext();
 
@@ -6,6 +7,7 @@ const AppContextProvider = ({ children }) => {
     const [urlData, setUrlData] = useState([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
+    const [inputErrors, setInputErrors] = useState({})
 
     const GenerateShortUri = async (url) => {
         try {
@@ -25,6 +27,43 @@ const AppContextProvider = ({ children }) => {
         }
     };
 
+    const SignupUser = async (formData) => {
+        try {
+            const parsedInputs = SignupSchema.safeParse(formData);
+            if (!parsedInputs.success) {
+                parsedInputs.error.issues.map((item) => {
+                    const newInputError = {
+                        path: item.path.join('.'),
+                        message: item.message,
+                    };
+                    // console.log(newInputError)
+                    setInputErrors(newInputError)
+                });
+
+                console.log(inputErrors)
+                // Stop execution here
+                return;
+            };
+
+
+
+
+            // const request = await fetch(`${import.meta.env.VITE_SERVER_URI}/api/user/signup`, {
+            //     method: "post",
+            //     headers: {
+            //         'Content-type': 'application/json',
+            //     },
+            //     body: JSON.stringify(formData),
+            // });
+
+            // const response = await request.json();
+            // console.log(response);
+            // return response;
+        } catch (error) {
+            console.log(error)
+        }
+    }
+
 
     useEffect(() => {
         async function GetUrlData() {
@@ -40,7 +79,7 @@ const AppContextProvider = ({ children }) => {
     }, []);
 
     return (
-        <AppContext.Provider value={{ GenerateShortUri, urlData, loading, error }}>
+        <AppContext.Provider value={{ GenerateShortUri, SignupUser, urlData, loading, error }}>
             {children}
         </AppContext.Provider>
     )
