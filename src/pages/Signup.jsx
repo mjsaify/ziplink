@@ -1,3 +1,4 @@
+import { z } from 'zod';
 import { useState } from "react";
 import { Label } from "@/components/ui/label"
 import { Input } from "@/components/ui/input"
@@ -6,20 +7,44 @@ import { ArrowRight, Lock, Mail } from "lucide-react";
 import { Link } from "react-router-dom";
 import { SignupInitialValues } from "../utils/_constants";
 import { useContextProvider } from "../reducer";
+import { SignupSchema } from "../utils/_types";
 
 const Signup = () => {
     const [formData, setFormData] = useState(SignupInitialValues);
-    const { SignupUser } = useContextProvider();
+    const [formDataError, setFormDataError] = useState({});
+    const { SignupUser, inputErrors } = useContextProvider();
+
 
     const handleChange = (e) => {
         const { name, value } = e.target;
         setFormData({ ...formData, [name]: value });
+
+        try {
+            SignupSchema.pick({ [name]: true }).parse({ [name]: value });
+            setFormDataError({ ...formDataError, [name]: "" });
+        } catch (error) {
+            if (error instanceof z.ZodError) {
+                setFormDataError({ ...formDataError, [name]: error.errors[0].message });
+            }
+        }
     }
 
     const handleSignup = async (e) => {
         e.preventDefault();
-        await SignupUser(formData);  
-    }
+        try {
+            const parsedInputs = SignupSchema.safeParse(formData);
+            if (!parsedInputs.success) {
+                const errors = parsedInputs.error.format(); // This variable holds the error data, which is available immediately after the parsing function runs. 
+                // setFormDataError(errors); // Update state with errors
+                console.log(errors.email); // Log the errors directly
+                // Stop execution here
+                return;
+            }
+            await SignupUser(formData);
+        } catch (error) {
+            console.error("Error during signup:", error);
+        }
+    };
 
     return (
         <div className="flex items-center justify-center">
@@ -45,6 +70,7 @@ const Signup = () => {
                             />
                             <Mail className="absolute left-3 top-1/2 transform -translate-y-1/2 text-[#C9CED6]" size={18} />
                         </div>
+                        {formDataError.email && <p style={{ color: "red" }}>{formDataError.email}</p>}
                     </div>
                     <div className="space-y-2">
                         <Label htmlFor="password" className="text-[#C9CED6]">
@@ -62,6 +88,7 @@ const Signup = () => {
                             />
                             <Lock className="absolute left-3 top-1/2 transform -translate-y-1/2 text-[#C9CED6]" size={18} />
                         </div>
+                        {formDataError.password && <p style={{ color: "red" }}>{formDataError.password}</p>}
                     </div>
                     <Button type="submit" className="w-full bg-[#144EE3] hover:bg-[#144EE3]/90 text-white">
                         Sign Up

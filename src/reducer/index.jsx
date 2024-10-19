@@ -7,7 +7,7 @@ const AppContextProvider = ({ children }) => {
     const [urlData, setUrlData] = useState([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
-    const [inputErrors, setInputErrors] = useState({})
+    const [inputErrors, setInputErrors] = useState(null)
 
     const GenerateShortUri = async (url) => {
         try {
@@ -29,24 +29,7 @@ const AppContextProvider = ({ children }) => {
 
     const SignupUser = async (formData) => {
         try {
-            const parsedInputs = SignupSchema.safeParse(formData);
-            if (!parsedInputs.success) {
-                parsedInputs.error.issues.map((item) => {
-                    const newInputError = {
-                        path: item.path.join('.'),
-                        message: item.message,
-                    };
-                    // console.log(newInputError)
-                    setInputErrors(newInputError)
-                });
-
-                console.log(inputErrors)
-                // Stop execution here
-                return;
-            };
-
-
-
+            console.log("Form submitted");
 
             // const request = await fetch(`${import.meta.env.VITE_SERVER_URI}/api/user/signup`, {
             //     method: "post",
@@ -64,6 +47,9 @@ const AppContextProvider = ({ children }) => {
         }
     }
 
+    useEffect(() => {
+
+    }, [inputErrors])
 
     useEffect(() => {
         async function GetUrlData() {
@@ -79,7 +65,7 @@ const AppContextProvider = ({ children }) => {
     }, []);
 
     return (
-        <AppContext.Provider value={{ GenerateShortUri, SignupUser, urlData, loading, error }}>
+        <AppContext.Provider value={{ GenerateShortUri, SignupUser, urlData, loading, error, inputErrors }}>
             {children}
         </AppContext.Provider>
     )
