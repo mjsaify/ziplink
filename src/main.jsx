@@ -1,17 +1,22 @@
 import { StrictMode } from 'react'
 import { createRoot } from 'react-dom/client'
-import { createBrowserRouter, RouterProvider } from 'react-router-dom'
 import AppContextProvider from './reducer';
-import AppRoutes from './routes';
+import { Toaster } from './components/ui/toaster';
+import { BrowserRouter } from 'react-router-dom'; 
+import { AppRouter } from './routes';
 import './index.css'
+import Navbar from './components/Navbar';
 
-const router = createBrowserRouter(AppRoutes);
 
 
 createRoot(document.getElementById('root')).render(
-  <AppContextProvider>
-    <StrictMode>
-      <RouterProvider router={router} />
-    </StrictMode>,
-  </AppContextProvider>
+  <StrictMode>
+    <BrowserRouter>
+      <AppContextProvider>
+        <Navbar/>
+        <AppRouter/>
+        <Toaster />
+      </AppContextProvider>
+    </BrowserRouter>
+  </StrictMode>,
 )

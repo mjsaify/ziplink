@@ -3,8 +3,20 @@ import { Input } from "@/components/ui/input"
 import { Button } from "@/components/ui/button"
 import { ArrowRight, Lock, Mail } from "lucide-react";
 import { Link } from "react-router-dom";
+import { useForm } from "react-hook-form";
+import { LoginSchema } from "../utils/_types";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { useContextProvider } from "../reducer";
 
 const Login = () => {
+    const { register, handleSubmit, formState: { errors } } = useForm({ resolver: zodResolver(LoginSchema) });
+    const { LoginUser } = useContextProvider();
+    const onSubmit = async (data) => {
+        // make api call
+        await LoginUser(data)
+    };
+
+
     return (
         <div className="flex justify-center">
             <div className="w-full max-w-md p-8 space-y-8 bg-[#181e29] rounded-xl shadow-2xl">
@@ -12,7 +24,7 @@ const Login = () => {
                     <h1 className="text-3xl font-bold text-white">Login Now</h1>
                     <p className="mt-2 text-[#C9CED6]">Login to continue your journey</p>
                 </div>
-                <form className="space-y-6">
+                <form className="space-y-6" onSubmit={handleSubmit(onSubmit)} noValidate>
                     <div className="space-y-2">
                         <Label htmlFor="email" className="text-[#C9CED6]">
                             Email Address
@@ -22,10 +34,12 @@ const Login = () => {
                                 id="email"
                                 placeholder="you@example.com"
                                 type="email"
+                                {...register("email")}
                                 className="pl-10 bg-[#353C4A] border-[#353C4A] text-white placeholder-[#C9CED6] focus:border-[#144EE3] focus:ring-[#144EE3]"
                             />
                             <Mail className="absolute left-3 top-1/2 transform -translate-y-1/2 text-[#C9CED6]" size={18} />
                         </div>
+                        {errors.email && <p className='text-red-500 my-0'>{errors.email?.message}</p>}
                     </div>
                     <div className="space-y-2">
                         <Label htmlFor="password" className="text-[#C9CED6]">
@@ -36,10 +50,12 @@ const Login = () => {
                                 id="password"
                                 placeholder="••••••••"
                                 type="password"
+                                {...register("password")}
                                 className="pl-10 bg-[#353C4A] border-[#353C4A] text-white placeholder-[#C9CED6] focus:border-[#144EE3] focus:ring-[#144EE3]"
                             />
                             <Lock className="absolute left-3 top-1/2 transform -translate-y-1/2 text-[#C9CED6]" size={18} />
                         </div>
+                        {errors.password && <p className='text-red-500 my-0'>{errors.password?.message}</p>}
                     </div>
                     <Button className="w-full bg-[#144EE3] hover:bg-[#144EE3]/90 text-white">
                         Login

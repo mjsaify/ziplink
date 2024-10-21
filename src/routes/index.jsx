@@ -1,20 +1,20 @@
-import Landing from "../pages/Landing";
+import { Route, Routes } from "react-router-dom";
 import RootLayout from "../pages/RootLayout";
-import { LoginRoute, SignupRoute } from "./auth";
+import Login from "../pages/Login"
+import Signup from "../pages/Signup"
+import Dashboard from "../pages/Dashboard";
+import PrivateRoutes from "./PrivateRoutes";
 
-const AppRoutes = [
-    {
-        path: '/',
-        element: <RootLayout />,
-        children: [
-            {
-                index: true,
-                element: <Landing />
-            },
-            LoginRoute,
-            SignupRoute,
-        ]
-    },
-];
 
-export default AppRoutes;
+export const AppRouter = () => {
+    return (
+        <Routes>
+            <Route path="/" element={<RootLayout />} />
+            <Route exact path="/dashboard" element={<PrivateRoutes/>}>
+                <Route path="/dashboard" element={Dashboard} />
+            </Route>
+            <Route path="/login" element={<Login />} />
+            <Route path="/signup" element={<Signup />} />
+        </Routes>
+    )
+}
