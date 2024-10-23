@@ -2,19 +2,26 @@ import { Label } from "@/components/ui/label"
 import { Input } from "@/components/ui/input"
 import { Button } from "@/components/ui/button"
 import { ArrowRight, Lock, Mail } from "lucide-react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { useContextProvider } from "../reducer";
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { SignupSchema } from '../utils/_types';
+import { useEffect } from "react";
 
 const Signup = () => {
     const { register, handleSubmit, formState: { errors } } = useForm({ resolver: zodResolver(SignupSchema) });
-    const { SignupUser } = useContextProvider();
+    const { SignupUser, isAuthenticated } = useContextProvider();
+    const navigate = useNavigate();
     const onSubmit = async (data) => {
         await SignupUser(data);
     };
 
+    useEffect(()=>{
+        if(isAuthenticated){
+            navigate("/dashboard")
+        }
+    },[])
     return (
         <div className="flex items-center justify-center">
             <div className="w-full max-w-md p-8 space-y-8 bg-[#181e29] rounded-xl shadow-2xl">

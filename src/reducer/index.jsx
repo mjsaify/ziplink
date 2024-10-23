@@ -1,19 +1,18 @@
 /* eslint-disable react/prop-types */
 import { createContext, useContext, useEffect, useState } from "react";
 import { useToast } from "@/hooks/use-toast";
-import { useNavigate } from "react-router-dom";
-
 
 
 export const AppContext = createContext();
 
 const AppContextProvider = ({ children }) => {
-    const [isAuthenticated, setIsAuthenticated] = useState(false);
+    const [isAuthenticated, setIsAuthenticated] = useState(
+        localStorage.getItem("isAuthenticated") === "true" ? true : false
+    );
     const [urlData, setUrlData] = useState([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
     const { toast } = useToast();
-    const navigate = useNavigate()
 
     const GenerateShortUri = async (url) => {
         try {
@@ -25,7 +24,6 @@ const AppContextProvider = ({ children }) => {
                 body: JSON.stringify({ originalUrl: url }),
             });
             const response = await request.json();
-            console.log(response)
             setLoading(false);
             setUrlData([...urlData, response.url]);
         } catch (error) {
@@ -35,7 +33,7 @@ const AppContextProvider = ({ children }) => {
 
     const SignupUser = async (formData) => {
         try {
-            const request = await fetch(`${import.meta.env.VITE_SERVER_URI}/api/user/signup`, {
+            const request = await fetch(`${import.meta.env.VITE_SERVER_URI}/api/signup`, {
                 method: "post",
                 headers: {
                     'Content-type': 'application/json',
@@ -54,50 +52,54 @@ const AppContextProvider = ({ children }) => {
             });
         } catch (error) {
             console.log(error)
+            toast({
+                title: "ERR: While signup",
+                variant: "destructive"
+            })
         }
     };
 
     const LoginUser = async (formData) => {
         try {
-            const request = await fetch(`${import.meta.env.VITE_SERVER_URI}/api/user/login`, {
+            const request = await fetch(`${import.meta.env.VITE_SERVER_URI}/api/login`, {
                 method: "post",
                 headers: {
                     'Content-type': 'application/json',
                 },
                 body: JSON.stringify(formData),
+                credentials: 'include'
             });
-
             const response = await request.json();
-            console.log(response)
-            if (!response.success) {
-                toast({
-                    title: response.message,
-                });
-            };
-
-            setIsAuthenticated(true);
-            // navigate("/");
-            toast({
-                title: response.message,
-            });
+            return response;
         } catch (error) {
             console.log(error)
+            toast({
+                title: "ERR: While login",
+                variant: "destructive"
+            })
         }
     };
 
-    useEffect(() => {
-        async function CheckAuth() {
-            try {
-                const request = await fetch(`${import.meta.env.VITE_SERVER_URI}/api/auth/check-session`);
-                const response = await request.json();
-                console.log(response)
-                setIsAuthenticated(response.success);
-            } catch (error) {
-                console.log(error)
-            }
-        };
-        CheckAuth()
-    },[])
+
+    const LogoutUser = async () =>{
+        try {
+            const request = await fetch(`${import.meta.env.VITE_SERVER_URI}/api/user/logout`, {
+                method: "POST",
+                headers: {
+                    "Content-type": "application/json",
+                },
+                credentials: 'include'
+            });
+            const response = await request.json();
+            return response;
+        } catch (error) {
+            console.log(error)
+            toast({
+                title: "ERR: While logging you out",
+                variant: "destructive"
+            })
+        }
+    }
 
     useEffect(() => {
         async function GetUrlData() {
@@ -113,7 +115,7 @@ const AppContextProvider = ({ children }) => {
     }, []);
 
     return (
-        <AppContext.Provider value={{ GenerateShortUri, SignupUser, LoginUser, isAuthenticated, urlData, loading, error }}>
+        <AppContext.Provider value={{ GenerateShortUri, SignupUser, LoginUser, LogoutUser, isAuthenticated, setIsAuthenticated, urlData, loading, error }}>
             {children}
         </AppContext.Provider>
     )

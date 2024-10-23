@@ -2,20 +2,46 @@ import { Label } from "@/components/ui/label"
 import { Input } from "@/components/ui/input"
 import { Button } from "@/components/ui/button"
 import { ArrowRight, Lock, Mail } from "lucide-react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { useForm } from "react-hook-form";
 import { LoginSchema } from "../utils/_types";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useContextProvider } from "../reducer";
+import { toast } from "../hooks/use-toast";
+import { useEffect } from "react";
 
 const Login = () => {
-    const { register, handleSubmit, formState: { errors } } = useForm({ resolver: zodResolver(LoginSchema) });
-    const { LoginUser } = useContextProvider();
+    const { register, handleSubmit, formState: { errors } } = useForm({
+        defaultValues: {
+            email: "a@gmail.com",
+            password: "123456"
+        }, resolver: zodResolver(LoginSchema)
+    });
+    const { LoginUser, setIsAuthenticated, isAuthenticated } = useContextProvider();
+    const navigate = useNavigate();
+
     const onSubmit = async (data) => {
         // make api call
-        await LoginUser(data)
+        const response = await LoginUser(data)
+        if (response.success) {
+            localStorage.setItem("isAuthenticated", response.success); // Save in localStorage
+            setIsAuthenticated(true);
+            navigate("/dashboard");
+            toast({
+                title: response.message,
+            });
+        } else {
+            toast({
+                title: response.message,
+            });
+        };
     };
 
+    useEffect(()=>{
+        if(isAuthenticated){
+            navigate("/dashboard")
+        }
+    },[])
 
     return (
         <div className="flex justify-center">

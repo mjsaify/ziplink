@@ -1,11 +1,11 @@
-import Landing from "./Landing"
+import Navbar from "../components/Navbar"
+import { Outlet } from "react-router-dom"
 const RootLayout = () => {
   return (
-    <>
-      <main className="px-6">
-        <Landing />
-      </main>
-    </>
+    <main className="px-6">
+      <Navbar />
+      <Outlet/>
+    </main>
   )
 }
 
