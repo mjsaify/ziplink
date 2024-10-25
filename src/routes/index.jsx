@@ -5,6 +5,7 @@ import Login from "../pages/Login";
 import Landing from "../pages/Landing";
 import { PrivateRoutes } from "./PrivateRoutes";
 import Dashboard from "../pages/Dashboard";
+import SingleUrl from "../pages/SingleUrl";
 
 
 export const AppRouter = () => {
@@ -31,6 +32,14 @@ export const AppRouter = () => {
                     element: (
                         <PrivateRoutes>
                             <Dashboard />
+                        </PrivateRoutes>
+                    )
+                },
+                {
+                    path: "links/:userId",
+                    element: (
+                        <PrivateRoutes>
+                            <SingleUrl/>
                         </PrivateRoutes>
                     )
                 }

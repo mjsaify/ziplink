@@ -8,14 +8,31 @@ import {
 } from "@/components/ui/table";
 import { FaCopy } from "react-icons/fa6";
 import { TiArrowUnsorted } from "react-icons/ti";
-import { useContextProvider } from "../reducer"
+// import { useContextProvider } from "../reducer"
 import UrlStatus from "./UrlStatus";
 import { NumberToDate } from "../utils";
+import { useEffect, useState } from "react";
 
 
 const UrlTable = () => {
-    const { urlData, loading, error } = useContextProvider();
-    // console.log(urlData)
+    // const { urlData, loading, error } = useContextProvider();
+    const [urlData, setUrlData] = useState([]);
+    const [error, setError] = useState();
+    const [loading, setLoading] = useState(false);
+    
+    useEffect(() => {
+        setLoading(true)
+        async function GetUrlData() {
+            const request = await fetch(`${import.meta.env.VITE_SERVER_URI}/api/url`);
+            const response = await request.json();
+            if (response.error) {
+                setError(response.message);
+            }
+            setLoading(false);
+            setUrlData(response);
+        };
+        GetUrlData();
+    }, []);
 
     if (error) {
         return <h1 className="text-4xl text-red-500 text-center">{error}</h1>
@@ -68,5 +85,3 @@ const UrlTable = () => {
 }
 
 export default UrlTable
-
-

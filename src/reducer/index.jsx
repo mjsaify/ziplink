@@ -2,6 +2,7 @@
 import { createContext, useContext, useEffect, useState } from "react";
 import { useToast } from "@/hooks/use-toast";
 
+const BASE_URL = import.meta.env.VITE_SERVER_URI;
 
 export const AppContext = createContext();
 
@@ -10,6 +11,7 @@ const AppContextProvider = ({ children }) => {
         localStorage.getItem("isAuthenticated") === "true" ? true : false
     );
     const [urlData, setUrlData] = useState([]);
+    const [singleUrlData, setSingleUrlData] = useState({})
     const [refetch, setRefetch] = useState(false);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
@@ -18,7 +20,7 @@ const AppContextProvider = ({ children }) => {
     const GenerateShortUri = async (url) => {
         setLoading(true)
         try {
-            const request = await fetch(`${import.meta.env.VITE_SERVER_URI}/api/url/short-url`, {
+            const request = await fetch(`${BASE_URL}/api/url/short-url`, {
                 method: "POST",
                 headers: {
                     'Content-type': 'application/json'
@@ -44,7 +46,7 @@ const AppContextProvider = ({ children }) => {
 
     const SignupUser = async (formData) => {
         try {
-            const request = await fetch(`${import.meta.env.VITE_SERVER_URI}/api/signup`, {
+            const request = await fetch(`${BASE_URL}/api/signup`, {
                 method: "post",
                 headers: {
                     'Content-type': 'application/json',
@@ -72,7 +74,7 @@ const AppContextProvider = ({ children }) => {
 
     const LoginUser = async (formData) => {
         try {
-            const request = await fetch(`${import.meta.env.VITE_SERVER_URI}/api/login`, {
+            const request = await fetch(`${BASE_URL}/api/login`, {
                 method: "post",
                 headers: {
                     'Content-type': 'application/json',
@@ -94,7 +96,7 @@ const AppContextProvider = ({ children }) => {
 
     const LogoutUser = async () => {
         try {
-            const request = await fetch(`${import.meta.env.VITE_SERVER_URI}/api/user/logout`, {
+            const request = await fetch(`${BASE_URL}/api/user/logout`, {
                 method: "POST",
                 headers: {
                     "Content-type": "application/json",
@@ -110,15 +112,30 @@ const AppContextProvider = ({ children }) => {
                 variant: "destructive"
             })
         }
+    };
+
+    const GetSingleUrl = async (_id) =>{
+        try {
+            const request = await fetch(`${BASE_URL}/api/url/links/${_id}`);
+            const response = await request.json();
+            if(!response.success){
+                toast({
+                    title: response.error,
+                })
+            };
+            setSingleUrlData(response.url);
+        } catch (error) {
+            setError(error.message);
+        }
     }
 
     useEffect(() => {
         setLoading(true)
         async function GetUrlData() {
-            const request = await fetch(`${import.meta.env.VITE_SERVER_URI}/api/url`);
+            const request = await fetch(`${BASE_URL}/api/url`);
             const response = await request.json();
             if (response.error) {
-                setError(response.message);
+                setError(response.error);
             } else {
                 setUrlData(response);
             }
@@ -128,7 +145,7 @@ const AppContextProvider = ({ children }) => {
     }, [refetch]);
 
     return (
-        <AppContext.Provider value={{ GenerateShortUri, SignupUser, LoginUser, LogoutUser, isAuthenticated, setIsAuthenticated, urlData, loading, error }}>
+        <AppContext.Provider value={{ GenerateShortUri, SignupUser, LoginUser, LogoutUser, GetSingleUrl, singleUrlData, isAuthenticated, setIsAuthenticated, urlData, loading, error }}>
             {children}
         </AppContext.Provider>
     )
