@@ -15,8 +15,7 @@ import { NumberToDate } from "../utils";
 
 const UrlTable = () => {
     const { urlData, loading, error } = useContextProvider();
-
-    
+    // console.log(urlData)
 
     if (error) {
         return <h1 className="text-4xl text-red-500 text-center">{error}</h1>
@@ -43,7 +42,7 @@ const UrlTable = () => {
             <TableBody>
                 {
                     urlData && urlData.map((data) => {
-                        const { _id, originalUrl, shortUrl, clicks, urlStatus, date } = data;
+                        const { _id, originalUrl, shortUrl, clicks, urlStatus, date, qrCode } = data;
                         return (
                             <TableRow key={_id} className="hover:bg-grey">
                                 <TableCell className="w-full p-4 text-sm flex justify-between items-center relative text-lite">
@@ -51,7 +50,9 @@ const UrlTable = () => {
                                     <FaCopy className="cursor-pointer bg-grey-lite w-[30px] h-[30px] p-2 rounded-full absolute right-12" />
                                 </TableCell>
                                 <TableCell className="p-4 text-sm text-lite">{originalUrl.slice(0, 50)}</TableCell>
-                                <TableCell className="p-4 text-sm text-lite">scanner</TableCell>
+                                <TableCell className="text-sm text-lite mx">
+                                    <img src={qrCode.qrCodeImage} alt="" className="w-12 h-12 ml-2" />
+                                </TableCell>
                                 <TableCell className="p-4 text-sm text-lite text-center">{clicks}</TableCell>
                                 <TableCell className="p-4 text-sm text-center flex justify-between items-center relative">
                                     <UrlStatus urlStatus={urlStatus}/>

@@ -10,11 +10,13 @@ const AppContextProvider = ({ children }) => {
         localStorage.getItem("isAuthenticated") === "true" ? true : false
     );
     const [urlData, setUrlData] = useState([]);
+    const [refetch, setRefetch] = useState(false);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
     const { toast } = useToast();
 
     const GenerateShortUri = async (url) => {
+        setLoading(true)
         try {
             const request = await fetch(`${import.meta.env.VITE_SERVER_URI}/api/url/short-url`, {
                 method: "POST",
@@ -24,10 +26,19 @@ const AppContextProvider = ({ children }) => {
                 body: JSON.stringify({ originalUrl: url }),
             });
             const response = await request.json();
-            setLoading(false);
-            setUrlData([...urlData, response.url]);
+            if (!response.success) {
+                toast({
+                    title: response.message
+                });
+            }
+            setRefetch(!refetch);
+            toast({
+                title: response.message
+            });
         } catch (error) {
             console.log(error)
+        } finally {
+            setLoading(false);
         }
     };
 
@@ -81,7 +92,7 @@ const AppContextProvider = ({ children }) => {
     };
 
 
-    const LogoutUser = async () =>{
+    const LogoutUser = async () => {
         try {
             const request = await fetch(`${import.meta.env.VITE_SERVER_URI}/api/user/logout`, {
                 method: "POST",
@@ -102,17 +113,19 @@ const AppContextProvider = ({ children }) => {
     }
 
     useEffect(() => {
+        setLoading(true)
         async function GetUrlData() {
             const request = await fetch(`${import.meta.env.VITE_SERVER_URI}/api/url`);
             const response = await request.json();
             if (response.error) {
-                setError(response.error);
+                setError(response.message);
+            } else {
+                setUrlData(response);
             }
             setLoading(false);
-            setUrlData(response);
         };
         GetUrlData();
-    }, []);
+    }, [refetch]);
 
     return (
         <AppContext.Provider value={{ GenerateShortUri, SignupUser, LoginUser, LogoutUser, isAuthenticated, setIsAuthenticated, urlData, loading, error }}>
