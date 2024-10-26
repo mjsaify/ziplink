@@ -1,4 +1,4 @@
-import { BarChart, Filter } from "lucide-react"
+import { BarChart, Filter, Link, MousePointerClick, QrCode } from "lucide-react"
 import { Card, CardContent, CardHeader, CardTitle } from "../components/ui/card"
 import { Button } from "../components/ui/button"
 import { Input } from "../components/ui/input"
@@ -11,26 +11,51 @@ const Dashboard = () => {
   return (
     <main>
       <div className="grid gap-6 md:grid-cols-2">
+
         <Card className="bg-grey border-2 border-grey-lite">
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium text-white">Total Clicks</CardTitle>
+            <CardTitle className="text-sm font-medium text-white">Total URL Created</CardTitle>
             <BarChart className="h-4 w-4 text-white" />
+          </CardHeader>
+          <CardContent>
+            <div className="text-2xl font-bold text-white">253</div>
+            <p className="text-xs text-lite">Total short URLs created</p>
+          </CardContent>
+        </Card>
+        <Card className="bg-grey border-2 border-grey-lite">
+          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+            <CardTitle className="text-sm font-medium text-white">Active Links</CardTitle>
+            <Link className="h-4 w-4 text-white" />
+          </CardHeader>
+          <CardContent>
+            <div className="text-2xl font-bold text-white">56</div>
+            <p className="text-xs text-lite">All your short active links</p>
+          </CardContent>
+        </Card>
+        <Card className="bg-grey border-2 border-grey-lite">
+          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+            <CardTitle className="text-sm font-medium text-white">All Time Clicks</CardTitle>
+            <MousePointerClick className="h-4 w-4 text-white" />
           </CardHeader>
           <CardContent>
             <div className="text-2xl font-bold text-white">54213</div>
             <p className="text-xs text-lite">Across all your short URLs</p>
           </CardContent>
         </Card>
+
         <Card className="bg-grey border-2 border-grey-lite">
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium text-white">Active Links</CardTitle>
-            <p className="h-4 w-4 text-white" />
+            <CardTitle className="text-sm font-medium text-white">QR Code Scans</CardTitle>
+            <QrCode className="h-4 w-4 text-white" />
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold text-white">56</div>
-            <p className="text-xs text-lite">Total short URLs created</p>
+            <div className="text-2xl font-bold text-white">4534</div>
+            <p className="text-xs text-lite">Across all your short URLs</p>
           </CardContent>
         </Card>
+
+        
+        
       </div>
       <div className="my-12 flex justify-between">
         <h1 className="text-white text-4xl font-semibold">My Links</h1>
