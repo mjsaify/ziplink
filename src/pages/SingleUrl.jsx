@@ -1,19 +1,174 @@
 import { useEffect } from "react";
 import { useParams } from "react-router-dom";
 import { useContextProvider } from "../reducer";
+import { Label } from "../components/ui/label";
+import { Input } from "../components/ui/input";
+import { BarChart2, Copy, Download, QrCode, Trash2 } from "lucide-react";
+import { Button } from "../components/ui/button";
+import DatePicker from "../components/DatePicker";
+import SelectComp from "../components/SelectComp";
+import { Card, CardContent, CardHeader, CardTitle } from "../components/ui/card"
 
 const SingleUrl = () => {
     const { GetSingleUrl, singleUrlData } = useContextProvider();
     const { userId } = useParams();
-
     useEffect(() => {
         GetSingleUrl(userId)
     }, []);
 
-
-    console.log(singleUrlData)
     return (
-        <div>SingleUrl</div>
+        <main className="my-8">
+            <div className="mb-6">
+                <Label className="text-white font-normal text-base">URL Name</Label>
+                <Input placeholder="Custom Url Name" className="text-white border-grey-lite bg-grey mt-2" value="Custom url name" readOnly />
+            </div>
+            <div className="mb-6">
+                <Label className="text-white font-normal text-base">Short Url</Label>
+                <div className="flex items-center gap-x-4">
+                    <Input placeholder="Custom Url Name" className="text-white border-grey-lite bg-grey mt-2" value={singleUrlData.shortUrl} readOnly />
+                    <Button className="text-white flex items-center bg-grey-lite mt-2">
+                        <span className="max-sm:hidden">Copy</span>
+                        <Copy className="w-4 " />
+                    </Button>
+                </div>
+            </div>
+            <div className="mb-6">
+                <Label className="text-white font-normal text-base">Original Url</Label>
+                <Input placeholder="Custom Url Name" className="text-white border-grey-lite bg-grey mt-2" value={singleUrlData.originalUrl} readOnly />
+            </div>
+            <div className="mt-12 flex justify-between items-center max-md:flex-col max-md:items-start">
+                <div className="text-white flex flex-col">
+                    <span className="text-xl mb-4">Created At</span>
+                    <span>April 15th, 2023 at 4:00:00 PM</span>
+                </div>
+                <div className="my-8">
+                    <span className="text-white text-xl mb-8">Expiration Date</span>
+                    <DatePicker />
+                </div>
+                <div className="mb-8">
+                    <span className="text-white text-xl">URL Status</span>
+                    <SelectComp />
+                </div>
+            </div>
+
+            <div>
+                <span className="text-white text-2xl font-normal">QR Code</span>
+                <div className="mt-2 bg-grey border border-grey-lite p-4 rounded-lg flex items-center justify-center">
+                    <div className="w-32 h-32 bg-white flex items-center justify-center border">
+                        <img src={singleUrlData.qrCode?.qrCodeImage} alt="qr code" className="my-4" />
+                    </div>
+                </div>
+                <Button className="mt-2 bg-grey">
+                    <Download className="h-4 w-4 mr-2" />
+                    Download QR Code
+                </Button>
+            </div>
+            <div>
+                <h2 className="text-xl font-semibold mb-4">Analytics</h2>
+                <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-6">
+                    <Card className="bg-grey text-white border-grey-lite">
+                        <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+                            <CardTitle className="text-sm font-medium">Total Clicks</CardTitle>
+                            <BarChart2 className="h-4 w-4 text-muted-foreground text-white" />
+                        </CardHeader>
+                        <CardContent>
+                            <div className="text-2xl font-bold">200</div>
+                        </CardContent>
+                    </Card>
+                    <Card className="bg-grey text-white border-grey-lite">
+                        <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+                            <CardTitle className="text-sm font-medium">Unique Clicks</CardTitle>
+                            <BarChart2 className="h-4 w-4 text-muted-foreground text-white" />
+                        </CardHeader>
+                        <CardContent>
+                            <div className="text-2xl font-bold">34</div>
+                        </CardContent>
+                    </Card>
+                    <Card className="bg-grey text-white border-grey-lite">
+                        <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+                            <CardTitle className="text-sm font-medium">QR Code Scans</CardTitle>
+                            <QrCode className="h-4 w-4 text-muted-foreground text-white" />
+                        </CardHeader>
+                        <CardContent>
+                            <div className="text-2xl font-bold">600</div>
+                        </CardContent>
+                    </Card>
+                    <Card className="bg-grey text-white border-grey-lite">
+                        <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+                            <CardTitle className="text-sm font-medium">Downloads</CardTitle>
+                            <Download className="h-4 w-4 text-muted-foreground text-white" />
+                        </CardHeader>
+                        <CardContent>
+                            <div className="text-2xl font-bold">1200</div>
+                        </CardContent>
+                    </Card>
+                </div>
+            </div>
+            <div className="my-8">
+                <h1 className="text-2xl text-white">Analytics Over Time</h1>
+                <p className="text-white">Show Graph here</p>
+            </div>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mt-12">
+                <Card className="bg-grey text-white border-grey-lite">
+                    <CardHeader>
+                        <CardTitle>Top Referrers</CardTitle>
+                    </CardHeader>
+                    <CardContent>
+                        <ul className="space-y-2">
+                            <li className="flex justify-between items-center">
+                                <span>Google</span>
+                                <span className="text-sm text-white">40%</span>
+                            </li>
+                        </ul>
+                    </CardContent>
+                </Card>
+                <Card className="bg-grey text-white border-grey-lite">
+                    <CardHeader>
+                        <CardTitle>Most Scanned Links</CardTitle>
+                    </CardHeader>
+                    <CardContent>
+                        <ul className="space-y-2">
+                            <li className="flex justify-between items-center">
+                                <span>Homepage</span>
+                                <span className="text-sm text-white">150 scans</span>
+                            </li>
+                        </ul>
+                    </CardContent>
+                </Card>
+                <Card className="bg-grey text-white border-grey-lite">
+                    <CardHeader>
+                        <CardTitle>Clicks by Country</CardTitle>
+                    </CardHeader>
+                    <CardContent>
+                        <ul className="space-y-2">
+                            <li className="flex justify-between items-center">
+                                <span>United States</span>
+                                <span className="text-sm text-white">800 clicks</span>
+                            </li>
+                        </ul>
+                    </CardContent>
+                </Card>
+                <Card className="bg-grey text-white border-grey-lite">
+                    <CardHeader>
+                        <CardTitle>QR Code Scans by Platform</CardTitle>
+                    </CardHeader>
+                    <CardContent>
+                        <ul className="space-y-2">
+                            <li className="flex justify-between items-center">
+                                <span>Android</span>
+                                <span className="text-sm text-white">200 scans</span>
+                            </li>
+                        </ul>
+                    </CardContent>
+                </Card>
+            </div>
+            <div className="pt-6 text-right">
+                <Button variant="destructive">
+                    <Trash2 className="h-4 w-4 mr-2" />
+                    Delete URL
+                </Button>
+            </div>
+        </main>
     )
 }
 

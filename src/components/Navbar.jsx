@@ -28,7 +28,7 @@ const Navbar = () => {
 
 
   return (
-    <header className="container mx-auto px-12 py-8">
+    <header className="py-8">
       <nav className="flex justify-between items-center">
         <Link to="/">
           <h1 className="gradient-heading text-4xl font-semibold lg:text-5xl">ZipLink</h1>

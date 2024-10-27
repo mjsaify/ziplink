@@ -4,14 +4,15 @@ import { Button } from "../components/ui/button"
 import { Input } from "../components/ui/input"
 import MyLinks from "../components/MyLinks"
 import { useContextProvider } from "../reducer"
+import NewLinkDialog from "../components/NewLinkDialog"
 
 
 const Dashboard = () => {
   const { urlData } = useContextProvider();
   return (
     <main>
-      <div className="grid gap-6 md:grid-cols-2">
-
+      {/* Show these cards on user dashboard */}
+      {/* <div className="grid gap-6 md:grid-cols-2">
         <Card className="bg-grey border-2 border-grey-lite">
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
             <CardTitle className="text-sm font-medium text-white">Total URL Created</CardTitle>
@@ -53,13 +54,10 @@ const Dashboard = () => {
             <p className="text-xs text-lite">Across all your short URLs</p>
           </CardContent>
         </Card>
-
-        
-        
-      </div>
+      </div> */}
       <div className="my-12 flex justify-between">
         <h1 className="text-white text-4xl font-semibold">My Links</h1>
-        <Button className="border-none bg-brand-primary-blue text-white hover:">Create New Link</Button>
+        <NewLinkDialog/>
       </div>
       <div className="relative">
         <Input className="px-3 py-6 border-2 border-grey-lite text-white outline-none focus-within:border-lite" placeholder="Filter links..." />
