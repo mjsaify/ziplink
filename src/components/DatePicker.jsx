@@ -1,7 +1,6 @@
-import * as React from "react"
-import { addDays, format } from "date-fns"
+/* eslint-disable react/prop-types */
+import { format } from "date-fns"
 import { Calendar as CalendarIcon } from "lucide-react"
-
 import { cn } from "@/lib/utils"
 import { Button } from "@/components/ui/button"
 import { Calendar } from "@/components/ui/calendar"
@@ -10,54 +9,42 @@ import {
     PopoverContent,
     PopoverTrigger,
 } from "@/components/ui/popover"
-import {
-    Select,
-    SelectContent,
-    SelectItem,
-    SelectTrigger,
-    SelectValue,
-} from "@/components/ui/select"
+import { FormControl } from "@/components/ui/form"
 
-const DatePicker = () => {
-    const [date, setDate] = React.useState()
-
+const DatePicker = ({ field, expiresAt }) => {
+    const exp = new Date(expiresAt)
     return (
-        <div className="mt-4">
-            <Popover>
-                <PopoverTrigger asChild>
+        <Popover >
+            <PopoverTrigger asChild>
+                <FormControl >
                     <Button
                         variant={"outline"}
                         className={`${cn(
-                            "w-[280px] justify-start text-left font-normal",
-                            !date && "text-muted-foreground"
-                        )} bg-grey text-white border-grey-lite`}
+                            "w-[240px] pl-3 text-left font-normal",
+                            !field.value && "text-muted-foreground"
+                        )} text-black w-full`}
                     >
-                        <CalendarIcon />
-                        {date ? format(date, "PPP") : <span>Pick a date</span>}
+                        {field.value ? (
+                            format(field.value, "PPP")
+                        ) : (
+                            <span>Pick a date</span>
+                        )}
+                        <CalendarIcon className="ml-auto h-4 w-4 opacity-50" />
                     </Button>
-                </PopoverTrigger>
-                <PopoverContent className="flex w-auto flex-col space-y-2 p-2">
-                    <Select
-                        onValueChange={(value) =>
-                            setDate(addDays(new Date(), parseInt(value)))
-                        }
-                    >
-                        <SelectTrigger>
-                            <SelectValue placeholder="Select" />
-                        </SelectTrigger>
-                        <SelectContent position="popper">
-                            <SelectItem value="0">Today</SelectItem>
-                            <SelectItem value="1">Tomorrow</SelectItem>
-                            <SelectItem value="3">In 3 days</SelectItem>
-                            <SelectItem value="7">In a week</SelectItem>
-                        </SelectContent>
-                    </Select>
-                    <div className="rounded-md border">
-                        <Calendar mode="single" selected={date} onSelect={setDate}/>
-                    </div>
-                </PopoverContent>
-            </Popover>
-        </div>
+                </FormControl>
+            </PopoverTrigger>
+            <PopoverContent className="w-auto p-0" align="start">
+                <Calendar
+                    mode="single"
+                    selected={field.value}
+                    onSelect={field.onChange}
+                    disabled={(date) =>
+                        date < new Date("1900-01-01") || date < new Date()
+                    }
+                    initialFocus
+                />
+            </PopoverContent>
+        </Popover>
     )
 }
 export default DatePicker;

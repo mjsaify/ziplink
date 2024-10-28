@@ -1,24 +1,26 @@
+/* eslint-disable react/prop-types */
+import { FormControl } from "@/components/ui/form"
 import {
   Select,
   SelectContent,
-  SelectGroup,
   SelectItem,
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select"
 
-const SelectComp = () => {
+const SelectComp = ({ field, urlStatus }) => {
+
   return (
-    <Select>
-      <SelectTrigger className="w-[180px] bg-grey text-white border-grey-lite mt-4">
-        <SelectValue className="" placeholder="Select Status" />
-      </SelectTrigger>
+    <Select onValueChange={field.onChange} defaultValue={urlStatus} className="w-full">
+      <FormControl>
+        <SelectTrigger>
+          <SelectValue placeholder="Select status" />
+        </SelectTrigger>
+      </FormControl>
       <SelectContent>
-        <SelectGroup>
-          <SelectItem value="active">Active</SelectItem>
-          <SelectItem value="inactive">In-active</SelectItem>
-          <SelectItem value="expired">Expired</SelectItem>
-        </SelectGroup>
+        <SelectItem value="active">Active</SelectItem>
+        <SelectItem value="inactive">In-active</SelectItem>
+        <SelectItem value="expired">Expired</SelectItem>
       </SelectContent>
     </Select>
   )

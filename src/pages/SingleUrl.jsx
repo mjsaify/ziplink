@@ -5,13 +5,15 @@ import { Label } from "../components/ui/label";
 import { Input } from "../components/ui/input";
 import { BarChart2, Copy, Download, QrCode, Trash2 } from "lucide-react";
 import { Button } from "../components/ui/button";
-import DatePicker from "../components/DatePicker";
-import SelectComp from "../components/SelectComp";
 import { Card, CardContent, CardHeader, CardTitle } from "../components/ui/card"
+import EditUrl from "../components/EditUrl";
+import { FormatDateandTime } from "../utils";
+import UrlStatus from "../components/UrlStatus";
 
 const SingleUrl = () => {
     const { GetSingleUrl, singleUrlData } = useContextProvider();
     const { userId } = useParams();
+
     useEffect(() => {
         GetSingleUrl(userId)
     }, []);
@@ -20,13 +22,13 @@ const SingleUrl = () => {
         <main className="my-8">
             <div className="mb-6">
                 <Label className="text-white font-normal text-base">URL Name</Label>
-                <Input placeholder="Custom Url Name" className="text-white border-grey-lite bg-grey mt-2" value="Custom url name" readOnly />
+                <Input placeholder="Custom Url Name" className="text-white border-grey-lite bg-grey mt-2" value={singleUrlData.title || ""} readOnly />
             </div>
             <div className="mb-6">
                 <Label className="text-white font-normal text-base">Short Url</Label>
                 <div className="flex items-center gap-x-4">
-                    <Input placeholder="Custom Url Name" className="text-white border-grey-lite bg-grey mt-2" value={singleUrlData.shortUrl} readOnly />
-                    <Button className="text-white flex items-center bg-grey-lite mt-2">
+                    <Input placeholder="Custom Url Name" className="text-white border-grey-lite bg-grey mt-2" value={singleUrlData.shortUrl || ""} readOnly />
+                    <Button className="text-white flex items-center bg-brand-primary-blue mt-2">
                         <span className="max-sm:hidden">Copy</span>
                         <Copy className="w-4 " />
                     </Button>
@@ -34,20 +36,22 @@ const SingleUrl = () => {
             </div>
             <div className="mb-6">
                 <Label className="text-white font-normal text-base">Original Url</Label>
-                <Input placeholder="Custom Url Name" className="text-white border-grey-lite bg-grey mt-2" value={singleUrlData.originalUrl} readOnly />
+                <Input placeholder="Custom Url Name" className="text-white border-grey-lite bg-grey mt-2" value={singleUrlData.originalUrl || ""} readOnly />
             </div>
-            <div className="mt-12 flex justify-between items-center max-md:flex-col max-md:items-start">
+            <div className="my-12 flex justify-between items-center max-md:flex-col max-md:items-start">
                 <div className="text-white flex flex-col">
                     <span className="text-xl mb-4">Created At</span>
-                    <span>April 15th, 2023 at 4:00:00 PM</span>
+                    <span>{FormatDateandTime(singleUrlData.createdAt)}</span>
                 </div>
-                <div className="my-8">
-                    <span className="text-white text-xl mb-8">Expiration Date</span>
-                    <DatePicker />
+                <div className="max-sm:my-8 flex flex-col">
+                    <span className="text-white text-xl mb-4">Expires At</span>
+                    <span className="text-white">{FormatDateandTime(singleUrlData.expiresAt)}</span>
                 </div>
-                <div className="mb-8">
-                    <span className="text-white text-xl">URL Status</span>
-                    <SelectComp />
+                <div className="max-sm:mb-8 flex flex-col">
+                    <span className="text-white text-xl mb-4">URL Status</span>
+                    <div className="relative">
+                        <UrlStatus urlStatus={singleUrlData.urlStatus} />
+                    </div>
                 </div>
             </div>
 
@@ -58,7 +62,7 @@ const SingleUrl = () => {
                         <img src={singleUrlData.qrCode?.qrCodeImage} alt="qr code" className="my-4" />
                     </div>
                 </div>
-                <Button className="mt-2 bg-grey">
+                <Button className="mt-2 bg-brand-primary-blue">
                     <Download className="h-4 w-4 mr-2" />
                     Download QR Code
                 </Button>
@@ -162,7 +166,8 @@ const SingleUrl = () => {
                     </CardContent>
                 </Card>
             </div>
-            <div className="pt-6 text-right">
+            <div className="pt-6 flex justify-between">
+                <EditUrl urlStatus={singleUrlData.urlStatus} expiresAt={singleUrlData.expiresAt}/>
                 <Button variant="destructive">
                     <Trash2 className="h-4 w-4 mr-2" />
                     Delete URL

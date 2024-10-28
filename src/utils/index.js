@@ -2,8 +2,14 @@
 // conver date string to readable date format
 export const NumberToDate = (dateNumber) => {
     const date = new Date(dateNumber);
-    const newDate = date.setDate(date.getDate() + 7)
-    console.log(new Date(newDate).toDateString())
     const formattedDate = `${date.getMonth() + 1}-${date.getDate()}-${date.getFullYear()}`;
     return formattedDate;
+};
+
+export const FormatDateandTime = (DateandTime) => {
+    const dateTime = new Date(DateandTime);
+    const month = dateTime.toLocaleString('default', { month: "long"});
+    const time = dateTime.toLocaleTimeString()
+    const expiresAt = `${month} ${dateTime.getDate()}, ${dateTime.getFullYear()} at ${time}`
+    return expiresAt
 }

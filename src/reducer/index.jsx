@@ -25,7 +25,7 @@ const AppContextProvider = ({ children }) => {
                 headers: {
                     'Content-type': 'application/json'
                 },
-                body: JSON.stringify({ originalUrl: url }),
+                body: JSON.stringify(url),
             });
             const response = await request.json();
             if (!response.success) {
