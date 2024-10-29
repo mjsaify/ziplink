@@ -15,22 +15,33 @@ import { useForm } from "react-hook-form"
 import { z } from "zod"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { Form, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form"
+import { useEffect } from "react"
+import { useContextProvider } from "../reducer"
 
-const EditUrl = ({ urlStatus, expiresAt }) => {
-    const exp = new Date()
-    console.log(exp)
+const EditUrl = ({ urlStatus, expiresAt, urlId }) => {
+    const { UpdateShortUrl } = useContextProvider()
     const formSchema = z.object({
         expiresAt: z.date().optional(),
         urlStatus: z.string().optional()
     });
     const form = useForm({
-        resolver: zodResolver(formSchema), defaultValues: { 
-            expiresAt: exp
-         }
+        resolver: zodResolver(formSchema), defaultValues: {
+            expiresAt: new Date(),
+            urlStatus
+        }
     });
 
+    useEffect(() => {
+        if (expiresAt) { // expiresAt/urlStautus initially is undefined, when actual value arrives in expiresAt/urlStautus it updates the form value
+            form.setValue("expiresAt", new Date(expiresAt))
+        };
+        if (urlStatus) {
+            form.setValue("urlStatus", urlStatus)
+        }
+    }, [form, expiresAt, urlStatus])
+
     const onSubmit = async (data) => {
-        console.log(data)
+        await UpdateShortUrl(data, urlId);
     }
     return (
         <Dialog>
@@ -66,7 +77,8 @@ const EditUrl = ({ urlStatus, expiresAt }) => {
                                     <DatePicker field={field} expiresAt={expiresAt} />
                                     <FormMessage />
                                 </FormItem>
-                            )}
+                            )
+                            }
                         />
                         <DialogFooter>
                             <Button type="submit" className="bg-brand-primary-blue mt-6">Save changes</Button>

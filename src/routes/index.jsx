@@ -36,7 +36,7 @@ export const AppRouter = () => {
                     )
                 },
                 {
-                    path: "links/:userId",
+                    path: "links/:urlId",
                     element: (
                         <PrivateRoutes>
                             <SingleUrl/>

@@ -8,10 +8,10 @@ import {
   SelectValue,
 } from "@/components/ui/select"
 
-const SelectComp = ({ field, urlStatus }) => {
+const SelectComp = ({ field }) => {
 
   return (
-    <Select onValueChange={field.onChange} defaultValue={urlStatus} className="w-full">
+    <Select onValueChange={field.onChange} defaultValue={field.value} className="w-full">
       <FormControl>
         <SelectTrigger>
           <SelectValue placeholder="Select status" />

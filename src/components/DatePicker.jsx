@@ -11,8 +11,7 @@ import {
 } from "@/components/ui/popover"
 import { FormControl } from "@/components/ui/form"
 
-const DatePicker = ({ field, expiresAt }) => {
-    const exp = new Date(expiresAt)
+const DatePicker = ({ field }) => {
     return (
         <Popover >
             <PopoverTrigger asChild>

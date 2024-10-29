@@ -11,12 +11,12 @@ import { FormatDateandTime } from "../utils";
 import UrlStatus from "../components/UrlStatus";
 
 const SingleUrl = () => {
-    const { GetSingleUrl, singleUrlData } = useContextProvider();
-    const { userId } = useParams();
+    const { GetSingleUrl, singleUrlData, refetch } = useContextProvider();
+    const { urlId } = useParams();
 
     useEffect(() => {
-        GetSingleUrl(userId)
-    }, []);
+        GetSingleUrl(urlId)
+    }, [refetch]);
 
     return (
         <main className="my-8">
@@ -167,7 +167,7 @@ const SingleUrl = () => {
                 </Card>
             </div>
             <div className="pt-6 flex justify-between">
-                <EditUrl urlStatus={singleUrlData.urlStatus} expiresAt={singleUrlData.expiresAt}/>
+                <EditUrl urlStatus={singleUrlData.urlStatus} expiresAt={singleUrlData.expiresAt} urlId={urlId}/>
                 <Button variant="destructive">
                     <Trash2 className="h-4 w-4 mr-2" />
                     Delete URL

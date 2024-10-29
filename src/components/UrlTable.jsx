@@ -58,12 +58,12 @@ const UrlTable = () => {
             </TableHeader>
             <TableBody>
                 {
-                    urlData && urlData.map((data) => {
-                        const { _id, originalUrl, shortUrl, clicks, urlStatus, date, qrCode } = data;
+                    !urlData.length < 1 && urlData.map((data) => {
+                        const { _id, originalUrl, shortUrl, clicks, urlStatus, createdAt, qrCode } = data;
                         return (
                             <TableRow key={_id} className="hover:bg-grey">
                                 <TableCell className="w-full p-4 text-sm flex justify-between items-center relative text-lite">
-                                    {shortUrl}
+                                    <a href={shortUrl} target="_blank">{shortUrl}</a>
                                     <FaCopy className="cursor-pointer bg-grey-lite w-[30px] h-[30px] p-2 rounded-full absolute right-12" />
                                 </TableCell>
                                 <TableCell className="p-4 text-sm text-lite">{originalUrl.slice(0, 50)}</TableCell>
@@ -74,7 +74,7 @@ const UrlTable = () => {
                                 <TableCell className="p-4 text-sm text-center flex justify-between items-center relative">
                                     <UrlStatus urlStatus={urlStatus}/>
                                 </TableCell>
-                                <TableCell className="p-4 text-sm text-right text-lite">{NumberToDate(date)}</TableCell>
+                                <TableCell className="p-4 text-sm text-right text-lite">{NumberToDate(createdAt)}</TableCell>
                             </TableRow>
                         )
                     })

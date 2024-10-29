@@ -26,11 +26,13 @@ const AppContextProvider = ({ children }) => {
                     'Content-type': 'application/json'
                 },
                 body: JSON.stringify(url),
+                credentials: 'include'
             });
             const response = await request.json();
+            console.log(response)
             if (!response.success) {
                 toast({
-                    title: response.message
+                    title: response.error,
                 });
             }
             setRefetch(!refetch);
@@ -43,6 +45,36 @@ const AppContextProvider = ({ children }) => {
             setLoading(false);
         }
     };
+
+    const UpdateShortUrl = async (url, urlId) => {
+        try {
+            const request = await fetch(`${BASE_URL}/api/url/links/${urlId}`, {
+                method: "PUT",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify(url),
+                credentials: "include",
+            });
+            const response = await request.json();
+            if (!response.success) {
+                toast({
+                    title: response.message
+                });
+            };
+            setRefetch(!refetch);
+            toast({
+                title: response.message
+            });
+        } catch (error) {
+            console.log(error)
+            toast({
+                title: "ERR: While updating url",
+                variant: "destructive"
+            })
+        }
+    }
+
 
     const SignupUser = async (formData) => {
         try {
@@ -114,11 +146,11 @@ const AppContextProvider = ({ children }) => {
         }
     };
 
-    const GetSingleUrl = async (_id) =>{
+    const GetSingleUrl = async (_id) => {
         try {
             const request = await fetch(`${BASE_URL}/api/url/links/${_id}`);
             const response = await request.json();
-            if(!response.success){
+            if (!response.success) {
                 toast({
                     title: response.error,
                 })
@@ -127,7 +159,7 @@ const AppContextProvider = ({ children }) => {
         } catch (error) {
             setError(error.message);
         }
-    }
+    };
 
     useEffect(() => {
         setLoading(true)
@@ -145,7 +177,7 @@ const AppContextProvider = ({ children }) => {
     }, [refetch]);
 
     return (
-        <AppContext.Provider value={{ GenerateShortUri, SignupUser, LoginUser, LogoutUser, GetSingleUrl, singleUrlData, isAuthenticated, setIsAuthenticated, urlData, loading, error }}>
+        <AppContext.Provider value={{ GenerateShortUri, SignupUser, LoginUser, LogoutUser, GetSingleUrl, UpdateShortUrl, singleUrlData, isAuthenticated, setIsAuthenticated, refetch, urlData, loading, error }}>
             {children}
         </AppContext.Provider>
     )
