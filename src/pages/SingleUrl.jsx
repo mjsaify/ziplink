@@ -9,10 +9,13 @@ import { Card, CardContent, CardHeader, CardTitle } from "../components/ui/card"
 import EditUrl from "../components/EditUrl";
 import { FormatDateandTime } from "../utils";
 import UrlStatus from "../components/UrlStatus";
+import DownloadQrCodeButon from "../components/DownloadQrCodeButon";
 
 const SingleUrl = () => {
-    const { GetSingleUrl, singleUrlData, refetch } = useContextProvider();
+    const { GetSingleUrl, singleUrlData, refetch, DownloadQrCode } = useContextProvider();
     const { urlId } = useParams();
+
+    console.log(singleUrlData)
 
     useEffect(() => {
         GetSingleUrl(urlId)
@@ -59,13 +62,10 @@ const SingleUrl = () => {
                 <span className="text-white text-2xl font-normal">QR Code</span>
                 <div className="mt-2 bg-grey border border-grey-lite p-4 rounded-lg flex items-center justify-center">
                     <div className="w-32 h-32 bg-white flex items-center justify-center border">
-                        <img src={singleUrlData.qrCode?.qrCodeImage} alt="qr code" className="my-4" />
+                        <img src={singleUrlData.qrCode?.qrCodeImage} alt="qr code" className="my-4"/>
                     </div>
                 </div>
-                <Button className="mt-2 bg-brand-primary-blue">
-                    <Download className="h-4 w-4 mr-2" />
-                    Download QR Code
-                </Button>
+                <DownloadQrCodeButon DownloadQrCode={DownloadQrCode} id={singleUrlData._id} imageLink={singleUrlData?.qrCode?.qrCodeImage}/>
             </div>
             <div>
                 <h2 className="text-xl font-semibold mb-4">Analytics</h2>
@@ -76,7 +76,7 @@ const SingleUrl = () => {
                             <BarChart2 className="h-4 w-4 text-muted-foreground text-white" />
                         </CardHeader>
                         <CardContent>
-                            <div className="text-2xl font-bold">200</div>
+                            <div className="text-2xl font-bold">{singleUrlData.clicks}</div>
                         </CardContent>
                     </Card>
                     <Card className="bg-grey text-white border-grey-lite">
@@ -85,7 +85,7 @@ const SingleUrl = () => {
                             <BarChart2 className="h-4 w-4 text-muted-foreground text-white" />
                         </CardHeader>
                         <CardContent>
-                            <div className="text-2xl font-bold">34</div>
+                            <div className="text-2xl font-bold">{singleUrlData.uniqueClicks}</div>
                         </CardContent>
                     </Card>
                     <Card className="bg-grey text-white border-grey-lite">
@@ -94,7 +94,7 @@ const SingleUrl = () => {
                             <QrCode className="h-4 w-4 text-muted-foreground text-white" />
                         </CardHeader>
                         <CardContent>
-                            <div className="text-2xl font-bold">600</div>
+                            <div className="text-2xl font-bold">{singleUrlData.qrCode?.scans}</div>
                         </CardContent>
                     </Card>
                     <Card className="bg-grey text-white border-grey-lite">
@@ -103,7 +103,7 @@ const SingleUrl = () => {
                             <Download className="h-4 w-4 text-muted-foreground text-white" />
                         </CardHeader>
                         <CardContent>
-                            <div className="text-2xl font-bold">1200</div>
+                            <div className="text-2xl font-bold">{singleUrlData.qrCode?.downloads}</div>
                         </CardContent>
                     </Card>
                 </div>
@@ -113,7 +113,7 @@ const SingleUrl = () => {
                 <p className="text-white">Show Graph here</p>
             </div>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mt-12">
-                <Card className="bg-grey text-white border-grey-lite">
+                {/* <Card className="bg-grey text-white border-grey-lite">
                     <CardHeader>
                         <CardTitle>Top Referrers</CardTitle>
                     </CardHeader>
@@ -125,8 +125,8 @@ const SingleUrl = () => {
                             </li>
                         </ul>
                     </CardContent>
-                </Card>
-                <Card className="bg-grey text-white border-grey-lite">
+                </Card> */}
+                {/* <Card className="bg-grey text-white border-grey-lite">
                     <CardHeader>
                         <CardTitle>Most Scanned Links</CardTitle>
                     </CardHeader>
@@ -138,7 +138,7 @@ const SingleUrl = () => {
                             </li>
                         </ul>
                     </CardContent>
-                </Card>
+                </Card> */}
                 <Card className="bg-grey text-white border-grey-lite">
                     <CardHeader>
                         <CardTitle>Clicks by Country</CardTitle>

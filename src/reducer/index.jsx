@@ -1,8 +1,8 @@
 /* eslint-disable react/prop-types */
 import { createContext, useContext, useEffect, useState } from "react";
 import { useToast } from "@/hooks/use-toast";
+import { BASE_URL } from "../utils/_constants";
 
-const BASE_URL = import.meta.env.VITE_SERVER_URI;
 
 export const AppContext = createContext();
 
@@ -29,6 +29,7 @@ const AppContextProvider = ({ children }) => {
                 credentials: 'include'
             });
             const response = await request.json();
+            console.log(response)
             if (!response.success) {
                 return toast({
                     title: response.error,
@@ -160,6 +161,21 @@ const AppContextProvider = ({ children }) => {
         }
     };
 
+    const DownloadQrCode = async (_id) => {
+        try {
+            const request = await fetch(`${BASE_URL}/api/url/links/download/${_id}`);
+            const response = await request.json();
+            console.log(response)
+            if (!response.success) {
+                return toast({
+                    title: response.error,
+                })
+            };
+        } catch (error) {
+            setError(error.message);
+        }
+    }
+
     useEffect(() => {
         setLoading(true)
         async function GetUrlData() {
@@ -176,7 +192,7 @@ const AppContextProvider = ({ children }) => {
     }, [refetch]);
 
     return (
-        <AppContext.Provider value={{ GenerateShortUri, SignupUser, LoginUser, LogoutUser, GetSingleUrl, UpdateShortUrl, singleUrlData, isAuthenticated, setIsAuthenticated, refetch, urlData, setUrlData, loading, error }}>
+        <AppContext.Provider value={{ GenerateShortUri, SignupUser, LoginUser, LogoutUser, GetSingleUrl, UpdateShortUrl, DownloadQrCode, singleUrlData, isAuthenticated, setIsAuthenticated, refetch, urlData, loading, error }}>
             {children}
         </AppContext.Provider>
     )

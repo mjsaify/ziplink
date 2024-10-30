@@ -5,23 +5,24 @@ import { Input } from "../components/ui/input"
 import MyLinks from "../components/MyLinks"
 import { useContextProvider } from "../reducer"
 import NewLinkDialog from "../components/NewLinkDialog"
-import { useState } from "react"
+import { useEffect, useState } from "react"
 
 
 const Dashboard = () => {
-  const { urlData, setUrlData } = useContextProvider();
-  const [searchVal, setSearchVal] = useState("");
+  const { urlData } = useContextProvider();
+  const [filteredUrlData, setFilteredUrlData] = useState(urlData);
 
   const handleChange = (e) => {
-    const filterdItems = urlData.filter((item) =>{
-      if(item.title.toLowerCase().includes(e.target.value.toLowerCase())) return item;
+    const filterdItems = urlData.filter((item) => {
+      if (item.title.toLowerCase().includes(e.target.value.toLowerCase())) return item;
     });
 
-    // fix filter issue
-    console.log(filterdItems)
-    setUrlData(filterdItems)
+    setFilteredUrlData(filterdItems)
   };
 
+  useEffect(() => {
+    setFilteredUrlData(urlData)
+  }, [urlData]);
 
   return (
     <main>
@@ -80,7 +81,7 @@ const Dashboard = () => {
 
       <div className="mt-12">
         {
-          urlData.map((item) => (
+          filteredUrlData.length < 1 ? <h1 className="text-center text-expired-link text-2xl my-8">Not Found</h1> : filteredUrlData.map((item) => (
             <MyLinks key={item._id} {...item} />
           ))
         }
