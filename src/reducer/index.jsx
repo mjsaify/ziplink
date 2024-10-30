@@ -29,9 +29,8 @@ const AppContextProvider = ({ children }) => {
                 credentials: 'include'
             });
             const response = await request.json();
-            console.log(response)
             if (!response.success) {
-                toast({
+                return toast({
                     title: response.error,
                 });
             }
@@ -58,7 +57,7 @@ const AppContextProvider = ({ children }) => {
             });
             const response = await request.json();
             if (!response.success) {
-                toast({
+                return toast({
                     title: response.message
                 });
             };
@@ -88,7 +87,7 @@ const AppContextProvider = ({ children }) => {
 
             const response = await request.json();
             if (!response.success) {
-                toast({
+                return toast({
                     title: response.message,
                 });
             };
@@ -151,7 +150,7 @@ const AppContextProvider = ({ children }) => {
             const request = await fetch(`${BASE_URL}/api/url/links/${_id}`);
             const response = await request.json();
             if (!response.success) {
-                toast({
+                return toast({
                     title: response.error,
                 })
             };
@@ -177,7 +176,7 @@ const AppContextProvider = ({ children }) => {
     }, [refetch]);
 
     return (
-        <AppContext.Provider value={{ GenerateShortUri, SignupUser, LoginUser, LogoutUser, GetSingleUrl, UpdateShortUrl, singleUrlData, isAuthenticated, setIsAuthenticated, refetch, urlData, loading, error }}>
+        <AppContext.Provider value={{ GenerateShortUri, SignupUser, LoginUser, LogoutUser, GetSingleUrl, UpdateShortUrl, singleUrlData, isAuthenticated, setIsAuthenticated, refetch, urlData, setUrlData, loading, error }}>
             {children}
         </AppContext.Provider>
     )

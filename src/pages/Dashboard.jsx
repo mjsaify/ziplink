@@ -5,10 +5,24 @@ import { Input } from "../components/ui/input"
 import MyLinks from "../components/MyLinks"
 import { useContextProvider } from "../reducer"
 import NewLinkDialog from "../components/NewLinkDialog"
+import { useState } from "react"
 
 
 const Dashboard = () => {
-  const { urlData } = useContextProvider();
+  const { urlData, setUrlData } = useContextProvider();
+  const [searchVal, setSearchVal] = useState("");
+
+  const handleChange = (e) => {
+    const filterdItems = urlData.filter((item) =>{
+      if(item.title.toLowerCase().includes(e.target.value.toLowerCase())) return item;
+    });
+
+    // fix filter issue
+    console.log(filterdItems)
+    setUrlData(filterdItems)
+  };
+
+
   return (
     <main>
       {/* Show these cards on user dashboard */}
@@ -57,10 +71,10 @@ const Dashboard = () => {
       </div> */}
       <div className="my-12 flex justify-between">
         <h1 className="text-white text-4xl font-semibold">My Links</h1>
-        <NewLinkDialog/>
+        <NewLinkDialog />
       </div>
       <div className="relative">
-        <Input className="px-3 py-6 border-2 border-grey-lite text-white outline-none focus-within:border-lite" placeholder="Filter links..." />
+        <Input className="px-3 py-6 border-2 border-grey-lite text-white outline-none focus-within:border-lite" placeholder="Filter links..." onChange={(e) => handleChange(e)} />
         <Filter className="text-white absolute right-0 top-1/2 -translate-x-1/2 -translate-y-1/2" />
       </div>
 

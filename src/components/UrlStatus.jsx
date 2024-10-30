@@ -18,13 +18,15 @@ const UrlStatus = (props) => {
                 <FaLinkSlash className="bg-grey-lite w-[30px] h-[30px] p-2 rounded-full text-inactive-link absolute top-0 right-2" />
             </>
         )
-    } else {
+    } else if (urlStatus === "expired") {
         return (
             <>
                 <span className="text-expired-link">Expired</span>
                 <FaLinkSlash className="bg-grey-lite w-[30px] h-[30px] p-2 rounded-full text-expired-link absolute top-0 right-2" />
             </>
         )
+    } else {
+        return null;
     }
 }
 
