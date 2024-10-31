@@ -1,7 +1,7 @@
 /* eslint-disable react/prop-types */
-import { Copy, Download, Trash } from "lucide-react"
+import { Copy, Download } from "lucide-react"
 import { Link } from "react-router-dom"
-import { FormatDateandTime } from "../utils";
+import { FormatDateandTime, handleCopyToClipboard } from "../utils";
 
 const MyLinks = (props) => {
     const { _id, shortUrl, originalUrl, createdAt, qrCode: { qrCodeImage }, title } = props;
@@ -16,9 +16,8 @@ const MyLinks = (props) => {
                         <Link to={`/links/${_id}`} className="hover:underline">{title}</Link>
                     </h1>
                     <div className="flex gap-x-4">
-                        <Copy className="cursor-pointer hover:text-brand-primary-blue" />
+                        <Copy className="cursor-pointer hover:text-brand-primary-blue" onClick={()=> handleCopyToClipboard(shortUrl)} />
                         <Download className="cursor-pointer hover:text-brand-primary-blue" />
-                        <Trash className="cursor-pointer hover:text-brand-primary-blue" />
                     </div>
                 </div>
                 <div className="mt-4">

@@ -26,7 +26,7 @@ const Login = () => {
         if (response.success) {
             localStorage.setItem("isAuthenticated", response.success); // Save in localStorage
             setIsAuthenticated(true);
-            navigate("/dashboard");
+            navigate("/links");
             toast({
                 title: response.message,
             });
@@ -39,7 +39,7 @@ const Login = () => {
 
     useEffect(()=>{
         if(isAuthenticated){
-            navigate("/dashboard")
+            navigate("/links")
         }
     },[])
 

@@ -1,5 +1,5 @@
 import { useEffect } from "react";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { useContextProvider } from "../reducer";
 import { Label } from "../components/ui/label";
 import { Input } from "../components/ui/input";
@@ -7,15 +7,26 @@ import { BarChart2, Copy, Download, QrCode, Trash2 } from "lucide-react";
 import { Button } from "../components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "../components/ui/card"
 import EditUrl from "../components/EditUrl";
-import { FormatDateandTime } from "../utils";
+import { FormatDateandTime, handleCopyToClipboard } from "../utils";
 import UrlStatus from "../components/UrlStatus";
 import DownloadQrCodeButon from "../components/DownloadQrCodeButon";
+import { toast } from "../hooks/use-toast";
 
 const SingleUrl = () => {
-    const { GetSingleUrl, singleUrlData, refetch, DownloadQrCode } = useContextProvider();
+    const { GetSingleUrl, singleUrlData, setRefetch, refetch, DeleteUri, DownloadQrCode } = useContextProvider();
     const { urlId } = useParams();
+    const navigate = useNavigate();
 
-    console.log(singleUrlData)
+    const handleDeleteUrl = async () =>{
+        const response = await DeleteUri(singleUrlData._id);
+        if(response.success){
+            toast({
+                title: response.message,
+            });
+            setRefetch(!refetch);
+            return navigate("/dashboard");
+        }
+    }
 
     useEffect(() => {
         GetSingleUrl(urlId)
@@ -31,7 +42,7 @@ const SingleUrl = () => {
                 <Label className="text-white font-normal text-base">Short Url</Label>
                 <div className="flex items-center gap-x-4">
                     <Input placeholder="Custom Url Name" className="text-white border-grey-lite bg-grey mt-2" value={singleUrlData.shortUrl || ""} readOnly />
-                    <Button className="text-white flex items-center bg-brand-primary-blue mt-2">
+                    <Button className="text-white flex items-center bg-brand-primary-blue mt-2" onClick={()=> handleCopyToClipboard(singleUrlData.shortUrl)}>
                         <span className="max-sm:hidden">Copy</span>
                         <Copy className="w-4 " />
                     </Button>
@@ -62,10 +73,10 @@ const SingleUrl = () => {
                 <span className="text-white text-2xl font-normal">QR Code</span>
                 <div className="mt-2 bg-grey border border-grey-lite p-4 rounded-lg flex items-center justify-center">
                     <div className="w-32 h-32 bg-white flex items-center justify-center border">
-                        <img src={singleUrlData.qrCode?.qrCodeImage} alt="qr code" className="my-4"/>
+                        <img src={singleUrlData.qrCode?.qrCodeImage} alt="qr code" className="my-4" />
                     </div>
                 </div>
-                <DownloadQrCodeButon DownloadQrCode={DownloadQrCode} id={singleUrlData._id} imageLink={singleUrlData?.qrCode?.qrCodeImage}/>
+                <DownloadQrCodeButon DownloadQrCode={DownloadQrCode} id={singleUrlData._id} imageLink={singleUrlData?.qrCode?.qrCodeImage} />
             </div>
             <div>
                 <h2 className="text-xl font-semibold mb-4">Analytics</h2>
@@ -167,8 +178,8 @@ const SingleUrl = () => {
                 </Card>
             </div>
             <div className="pt-6 flex justify-between">
-                <EditUrl urlStatus={singleUrlData.urlStatus} expiresAt={singleUrlData.expiresAt} urlId={urlId}/>
-                <Button variant="destructive">
+                <EditUrl urlStatus={singleUrlData.urlStatus} expiresAt={singleUrlData.expiresAt} urlId={urlId} />
+                <Button variant="destructive" onClick={handleDeleteUrl}>
                     <Trash2 className="h-4 w-4 mr-2" />
                     Delete URL
                 </Button>

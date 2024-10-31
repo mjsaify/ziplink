@@ -1,3 +1,4 @@
+import { toast } from "../hooks/use-toast";
 
 // conver date string to readable date format
 export const NumberToDate = (dateNumber) => {
@@ -12,4 +13,19 @@ export const FormatDateandTime = (DateandTime) => {
     const time = dateTime.toLocaleTimeString()
     const expiresAt = `${month} ${dateTime.getDate()}, ${dateTime.getFullYear()} at ${time}`
     return expiresAt
+};
+
+
+export const handleCopyToClipboard = async (shortUrl) =>{
+    try {
+        await window.navigator.clipboard.writeText(shortUrl);
+        toast({
+            title: "Copied"
+        })
+    } catch (error) {
+        console.log(error)
+        toast({
+            title: "Copy Failed"
+        })
+    }
 }

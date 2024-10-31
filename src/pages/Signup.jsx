@@ -19,7 +19,7 @@ const Signup = () => {
 
     useEffect(()=>{
         if(isAuthenticated){
-            navigate("/dashboard")
+            navigate("/links")
         }
     },[])
     return (

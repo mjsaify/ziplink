@@ -29,7 +29,6 @@ const AppContextProvider = ({ children }) => {
                 credentials: 'include'
             });
             const response = await request.json();
-            console.log(response)
             if (!response.success) {
                 return toast({
                     title: response.error,
@@ -70,6 +69,32 @@ const AppContextProvider = ({ children }) => {
             console.log(error)
             toast({
                 title: "ERR: While updating url",
+                variant: "destructive"
+            })
+        }
+    };
+
+    const DeleteUri = async (id) =>{
+        try{
+            const request = await fetch(`${BASE_URL}/api/url/links/delete/${id}`, {
+                method: "DELETE",
+                headers: {
+                    "Content-type": "application/json"
+                },
+                credentials: 'include'
+            });
+
+            const response = await request.json();
+            if(!response.success){
+                toast({
+                    title: response.message,
+                })
+            };
+            return response;
+        }catch(err){
+            console.log(err);
+            toast({
+                title: "ERR: While deleting",
                 variant: "destructive"
             })
         }
@@ -165,12 +190,12 @@ const AppContextProvider = ({ children }) => {
         try {
             const request = await fetch(`${BASE_URL}/api/url/links/download/${_id}`);
             const response = await request.json();
-            console.log(response)
             if (!response.success) {
                 return toast({
                     title: response.error,
                 })
             };
+            return response;
         } catch (error) {
             setError(error.message);
         }
@@ -192,7 +217,7 @@ const AppContextProvider = ({ children }) => {
     }, [refetch]);
 
     return (
-        <AppContext.Provider value={{ GenerateShortUri, SignupUser, LoginUser, LogoutUser, GetSingleUrl, UpdateShortUrl, DownloadQrCode, singleUrlData, isAuthenticated, setIsAuthenticated, refetch, urlData, loading, error }}>
+        <AppContext.Provider value={{ GenerateShortUri, SignupUser, LoginUser, LogoutUser, GetSingleUrl, UpdateShortUrl, DeleteUri, DownloadQrCode, singleUrlData, isAuthenticated, setIsAuthenticated, setRefetch, refetch, urlData, loading, error }}>
             {children}
         </AppContext.Provider>
     )
