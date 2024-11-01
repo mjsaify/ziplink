@@ -5,8 +5,7 @@ import { FormatDateandTime, handleCopyToClipboard } from "../utils";
 
 const MyLinks = (props) => {
     const { _id, shortUrl, originalUrl, createdAt, qrCode: { qrCodeImage }, title } = props;
-
-
+    
     return (
         <div className="bg-grey p-4 my-4 mb-8 flex text-white border border-grey-lite rounded">
             <img src={qrCodeImage} alt="" />
@@ -21,7 +20,7 @@ const MyLinks = (props) => {
                     </div>
                 </div>
                 <div className="mt-4">
-                    <p className="text-2xl text-blue-500 hover:underline cursor-pointer">{shortUrl}</p>
+                    <a href={shortUrl} target="_blank" className="text-2xl text-blue-500 hover:underline cursor-pointer">{shortUrl}</a>
                     <p className="my-2 text-sm cursor-pointer hover:underline">{originalUrl}</p>
                     <p className="text-lite text-sm">{FormatDateandTime(createdAt)}</p>
                 </div>

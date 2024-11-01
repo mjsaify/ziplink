@@ -13,18 +13,19 @@ import { useEffect } from "react";
 const Login = () => {
     const { register, handleSubmit, formState: { errors } } = useForm({
         defaultValues: {
-            email: "a@gmail.com",
+            email: "john@gmail.com",
             password: "123456"
         }, resolver: zodResolver(LoginSchema)
     });
-    const { LoginUser, setIsAuthenticated, isAuthenticated } = useContextProvider();
+    const { LoginUser, setIsAuthenticated, isAuthenticated, refetch, setRefetch } = useContextProvider();
     const navigate = useNavigate();
 
     const onSubmit = async (data) => {
         // make api call
-        const response = await LoginUser(data)
+        const response = await LoginUser(data);
         if (response.success) {
             localStorage.setItem("isAuthenticated", response.success); // Save in localStorage
+            setRefetch(!refetch)
             setIsAuthenticated(true);
             navigate("/links");
             toast({
@@ -41,7 +42,7 @@ const Login = () => {
         if(isAuthenticated){
             navigate("/links")
         }
-    },[])
+    },[isAuthenticated, navigate])
 
     return (
         <div className="flex justify-center">

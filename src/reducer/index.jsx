@@ -10,6 +10,8 @@ const AppContextProvider = ({ children }) => {
     const [isAuthenticated, setIsAuthenticated] = useState(
         localStorage.getItem("isAuthenticated") === "true" ? true : false
     );
+    const [user, setUser] = useState({});
+    const [location, setLocation] = useState({});
     const [urlData, setUrlData] = useState([]);
     const [singleUrlData, setSingleUrlData] = useState({})
     const [refetch, setRefetch] = useState(false);
@@ -74,8 +76,8 @@ const AppContextProvider = ({ children }) => {
         }
     };
 
-    const DeleteUri = async (id) =>{
-        try{
+    const DeleteUri = async (id) => {
+        try {
             const request = await fetch(`${BASE_URL}/api/url/links/delete/${id}`, {
                 method: "DELETE",
                 headers: {
@@ -85,13 +87,13 @@ const AppContextProvider = ({ children }) => {
             });
 
             const response = await request.json();
-            if(!response.success){
+            if (!response.success) {
                 toast({
                     title: response.message,
                 })
             };
             return response;
-        }catch(err){
+        } catch (err) {
             console.log(err);
             toast({
                 title: "ERR: While deleting",
@@ -140,6 +142,8 @@ const AppContextProvider = ({ children }) => {
                 credentials: 'include'
             });
             const response = await request.json();
+            console.log(response)
+            setLocation(response.location);
             return response;
         } catch (error) {
             console.log(error)
@@ -171,9 +175,36 @@ const AppContextProvider = ({ children }) => {
         }
     };
 
+    const GetUserDetails = async () =>{
+        try {
+            const request = await fetch(`${BASE_URL}/api/user`, {
+                method: "GET",
+                headers: {
+                    "Content-type": "application/json"
+                },
+                credentials: "include"
+            });
+            const response = await request.json();
+            if(!response.success){
+                return toast({
+                    title: "Failed to fetch user"
+                });
+            };
+            setUser(response.user);
+        } catch (error) {
+            console.log(error)
+        }
+    }
+
     const GetSingleUrl = async (_id) => {
         try {
-            const request = await fetch(`${BASE_URL}/api/url/links/${_id}`);
+            const request = await fetch(`${BASE_URL}/api/url/links/${_id}`, {
+                method: "GET",
+                headers: {
+                    "Content-type": "application/json"
+                },
+                credentials: "include"
+            });
             const response = await request.json();
             if (!response.success) {
                 return toast({
@@ -188,7 +219,13 @@ const AppContextProvider = ({ children }) => {
 
     const DownloadQrCode = async (_id) => {
         try {
-            const request = await fetch(`${BASE_URL}/api/url/links/download/${_id}`);
+            const request = await fetch(`${BASE_URL}/api/url/links/download/${_id}`,{
+                method: "GET",
+                headers: {
+                    "Content-type": "application/json"
+                },
+                credentials: "include"
+            });
             const response = await request.json();
             if (!response.success) {
                 return toast({
@@ -202,22 +239,31 @@ const AppContextProvider = ({ children }) => {
     }
 
     useEffect(() => {
-        setLoading(true)
-        async function GetUrlData() {
-            const request = await fetch(`${BASE_URL}/api/url`);
-            const response = await request.json();
-            if (response.error) {
-                setError(response.error);
-            } else {
+        try {
+            setLoading(true)
+            async function GetUrlData() {
+                const request = await fetch(`${BASE_URL}/api/url`, {
+                    method: "GET",
+                    headers: {
+                        "Content-type": "application/json"
+                    },
+                    credentials: 'include'
+                });
+                const response = await request.json();
+                if (!response.success) {
+                    setError(response.message);
+                }
                 setUrlData(response);
-            }
-            setLoading(false);
-        };
-        GetUrlData();
+                setLoading(false);
+            };
+            GetUrlData();
+        } catch (error) {
+            console.log(error)
+        }
     }, [refetch]);
 
     return (
-        <AppContext.Provider value={{ GenerateShortUri, SignupUser, LoginUser, LogoutUser, GetSingleUrl, UpdateShortUrl, DeleteUri, DownloadQrCode, singleUrlData, isAuthenticated, setIsAuthenticated, setRefetch, refetch, urlData, loading, error }}>
+        <AppContext.Provider value={{ GenerateShortUri, SignupUser, LoginUser, LogoutUser, GetUserDetails, GetSingleUrl, UpdateShortUrl, DeleteUri, DownloadQrCode, location, user, singleUrlData, isAuthenticated, setIsAuthenticated, setRefetch, refetch, urlData, loading, error }}>
             {children}
         </AppContext.Provider>
     )

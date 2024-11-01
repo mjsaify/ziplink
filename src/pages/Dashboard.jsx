@@ -1,31 +1,56 @@
-import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "../components/ui/card";
+/* eslint-disable react/prop-types */
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "../components/ui/card";
 import { Button } from "../components/ui/button";
-import { BarChart, Calendar, Edit, Link2, MapPin, QrCode, Zap } from "lucide-react";
+import { BarChart, Calendar, Link2, MapPin, QrCode, Zap } from "lucide-react";
 import { Avatar, AvatarImage } from "../components/ui/avatar";
 import { Label } from "../components/ui/label";
 import { Input } from "../components/ui/input";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "../components/ui/tabs";
 import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle, AlertDialogTrigger } from "../components/ui/alert-dialog";
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import { useContextProvider } from "../reducer";
 
 const Dashboard = () => {
+    const { GetUserDetails, user: hello, refetch, location } = useContextProvider();
+
+    useEffect(() => {
+        GetUserDetails()
+    }, [refetch]);
+
+    const findTotalClicks = hello.url?.map((item) => item.clicks);
+    const totalClicks = findTotalClicks?.reduce((accumulator, currentValue) => {
+        return accumulator + currentValue;
+    }, 0);
+
+    const findTotalScans = hello.url?.map((item) => item.qrCode.scans);
+    const totalScans = findTotalScans?.reduce((accumulator, currentValue) => {
+        return accumulator + currentValue;
+    }, 0);
+
+    const findTotalDownloads = hello.url?.map((item) => item.qrCode.downloads);
+    const totalDownloads = findTotalDownloads?.reduce((accumulator, currentValue) => {
+        return accumulator + currentValue;
+    }, 0);
+
+    // console.log(hello.url?.map((item) => item.qrCode.scans))
+
     const user = {
         name: "Alice Johnson",
         email: "alice@example.com",
-        joinDate: "January 2023",
+        joinDate: hello.createdAt, // fix this first
         location: "New York, USA",
         website: "https://alice-johnson.com",
         avatar: "https://github.com/shadcn.png",
     };
 
-    
-  const [stats, setStats] = useState({
-    totalLinks: 156,
-    activeLinks: 86,
-    totalClicks: 10444,
-    qrScans: 1500,
-    qrDownloads: 5587,
-  })
+
+    const [stats, setStats] = useState({
+        totalLinks: 156,
+        activeLinks: 86,
+        totalClicks: 10444,
+        qrScans: 1500,
+        qrDownloads: 5587,
+    })
 
 
     const StatItem = ({ icon: Icon, label, value }) => (
@@ -34,7 +59,7 @@ const Dashboard = () => {
                 <Icon className="w-8 h-8 mr-3 text-blue-500" />
                 <span className="text-sm font-medium text-gray-300">{label}</span>
             </div>
-            <span className="text-xl font-bold text-white">{value.toLocaleString()}</span>
+            <span className="text-xl font-bold text-white">{value}</span>
         </div>
     )
 
@@ -53,8 +78,8 @@ const Dashboard = () => {
                                     <AvatarImage src={user.avatar} alt={user.name} />
                                 </Avatar>
                                 <div>
-                                    <CardTitle className="text-2xl">{user.name}</CardTitle>
-                                    <CardDescription className="text-gray-400">{user.email}</CardDescription>
+                                    <CardTitle className="text-2xl capitalize">{hello.fullname}</CardTitle>
+                                    <CardDescription className="text-gray-400">{hello.email}</CardDescription>
                                 </div>
                             </div>
                         </CardHeader>
@@ -66,7 +91,7 @@ const Dashboard = () => {
                                 </div>
                                 <div className="flex items-center text-gray-400">
                                     <MapPin className="h-5 w-5 mr-2" />
-                                    <span>{user.location}</span>
+                                    <span>{location.country}, {location.city}</span>
                                 </div>
                             </div>
                         </CardContent>
@@ -78,11 +103,11 @@ const Dashboard = () => {
                             <CardDescription className="text-gray-400">Link shortening activity</CardDescription>
                         </CardHeader>
                         <CardContent className="space-y-4">
-                            <StatItem icon={Link2} label="Total Links" value={stats.totalLinks} />
-                            <StatItem icon={Zap} label="Active Links" value={stats.activeLinks} />
-                            <StatItem icon={BarChart} label="Total Clicks" value={stats.totalClicks} />
-                            <StatItem icon={QrCode} label="QR Scans" value={stats.qrScans} />
-                            <StatItem icon={QrCode} label="QR Downloads" value={stats.qrDownloads} />
+                            <StatItem icon={Link2} label="Total Links" value={hello?.url?.length} />
+                            <StatItem icon={Zap} label="Active Links" value={hello.url?.filter((item) => item.urlStatus === "active").length} />
+                            <StatItem icon={BarChart} label="Total Clicks" value={totalClicks} />
+                            <StatItem icon={QrCode} label="QR Scans" value={totalScans} />
+                            <StatItem icon={QrCode} label="QR Downloads" value={totalDownloads?.toString()} />
                         </CardContent>
                     </Card>
 

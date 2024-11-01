@@ -1,15 +1,7 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { CiLogin } from "react-icons/ci";
 import { Link, useNavigate } from "react-router-dom";
 import { useContextProvider } from "../reducer";
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuLabel,
-  DropdownMenuSeparator,
-  DropdownMenuTrigger,
-} from "../components/ui/dropdown-menu"
 import { LayoutDashboard, Link2Icon, LogOutIcon, Menu, X } from "lucide-react";
 
 const Navbar = () => {
@@ -85,7 +77,7 @@ const Navbar = () => {
   )
 
   return (
-    <header className="py-8 ">
+    <header className="py-8 px-6">
       <nav className="">
         <div className="flex justify-between items-center">
           <Link to="/">
