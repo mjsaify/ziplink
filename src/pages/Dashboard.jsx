@@ -1,56 +1,43 @@
 /* eslint-disable react/prop-types */
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "../components/ui/card";
-import { Button } from "../components/ui/button";
-import { BarChart, Calendar, Link2, MapPin, QrCode, Zap } from "lucide-react";
+import { BarChart, Calendar, Link2, QrCode, Zap } from "lucide-react";
 import { Avatar, AvatarImage } from "../components/ui/avatar";
-import { Label } from "../components/ui/label";
-import { Input } from "../components/ui/input";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "../components/ui/tabs";
-import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle, AlertDialogTrigger } from "../components/ui/alert-dialog";
-import { useEffect, useState } from "react";
 import { useContextProvider } from "../reducer";
+import { FormatDateandTime } from "../utils";
+import { useEffect } from "react";
+import AccountSettings from "../components/AccountSettings";
 
 const Dashboard = () => {
-    const { GetUserDetails, user: hello, refetch, location } = useContextProvider();
+    const { GetUserDetails, user, refetch } = useContextProvider();
 
     useEffect(() => {
         GetUserDetails()
     }, [refetch]);
 
-    const findTotalClicks = hello.url?.map((item) => item.clicks);
+    const findTotalClicks = user.url?.map((item) => item.clicks);
     const totalClicks = findTotalClicks?.reduce((accumulator, currentValue) => {
         return accumulator + currentValue;
     }, 0);
 
-    const findTotalScans = hello.url?.map((item) => item.qrCode.scans);
+    const findTotalScans = user.url?.map((item) => item.qrCode.scans);
     const totalScans = findTotalScans?.reduce((accumulator, currentValue) => {
         return accumulator + currentValue;
     }, 0);
 
-    const findTotalDownloads = hello.url?.map((item) => item.qrCode.downloads);
+    const findTotalDownloads = user.url?.map((item) => item.qrCode.downloads);
     const totalDownloads = findTotalDownloads?.reduce((accumulator, currentValue) => {
         return accumulator + currentValue;
     }, 0);
 
-    // console.log(hello.url?.map((item) => item.qrCode.scans))
-
-    const user = {
+    const fakeId = {
         name: "Alice Johnson",
         email: "alice@example.com",
-        joinDate: hello.createdAt, // fix this first
+        joinDate: user.createdAt, // fix this first
         location: "New York, USA",
         website: "https://alice-johnson.com",
         avatar: "https://github.com/shadcn.png",
     };
 
-
-    const [stats, setStats] = useState({
-        totalLinks: 156,
-        activeLinks: 86,
-        totalClicks: 10444,
-        qrScans: 1500,
-        qrDownloads: 5587,
-    })
 
 
     const StatItem = ({ icon: Icon, label, value }) => (
@@ -75,11 +62,11 @@ const Dashboard = () => {
                         <CardHeader className="flex flex-row items-center justify-between">
                             <div className="flex items-center space-x-4">
                                 <Avatar className="h-20 w-20">
-                                    <AvatarImage src={user.avatar} alt={user.name} />
+                                    <AvatarImage src={fakeId.avatar} alt={fakeId.name} />
                                 </Avatar>
                                 <div>
-                                    <CardTitle className="text-2xl capitalize">{hello.fullname}</CardTitle>
-                                    <CardDescription className="text-gray-400">{hello.email}</CardDescription>
+                                    <CardTitle className="text-2xl capitalize">{user.fullname}</CardTitle>
+                                    <CardDescription className="text-gray-400">{user.email}</CardDescription>
                                 </div>
                             </div>
                         </CardHeader>
@@ -87,11 +74,7 @@ const Dashboard = () => {
                             <div className="grid grid-cols-2 gap-4 mt-4">
                                 <div className="flex items-center text-gray-400">
                                     <Calendar className="h-5 w-5 mr-2" />
-                                    <span>Joined {user.joinDate}</span>
-                                </div>
-                                <div className="flex items-center text-gray-400">
-                                    <MapPin className="h-5 w-5 mr-2" />
-                                    <span>{location.country}, {location.city}</span>
+                                    <span>Joined {FormatDateandTime(user.createdAt).split("at")[0]}</span>
                                 </div>
                             </div>
                         </CardContent>
@@ -103,90 +86,14 @@ const Dashboard = () => {
                             <CardDescription className="text-gray-400">Link shortening activity</CardDescription>
                         </CardHeader>
                         <CardContent className="space-y-4">
-                            <StatItem icon={Link2} label="Total Links" value={hello?.url?.length} />
-                            <StatItem icon={Zap} label="Active Links" value={hello.url?.filter((item) => item.urlStatus === "active").length} />
+                            <StatItem icon={Link2} label="Total Links" value={user?.url?.length} />
+                            <StatItem icon={Zap} label="Active Links" value={user.url?.filter((item) => item.urlStatus === "active").length} />
                             <StatItem icon={BarChart} label="Total Clicks" value={totalClicks} />
                             <StatItem icon={QrCode} label="QR Scans" value={totalScans} />
                             <StatItem icon={QrCode} label="QR Downloads" value={totalDownloads?.toString()} />
                         </CardContent>
                     </Card>
-
-                    <Card className="lg:col-span-3 bg-grey border-grey-lite text-white">
-                        <CardHeader>
-                            <CardTitle className="text-2xl">Account Settings</CardTitle>
-                        </CardHeader>
-                        <CardContent>
-                            <Tabs defaultValue="personal" className="w-full">
-                                <TabsList className="grid w-full grid-cols-2 mb-8 bg-grey hover:bg-grey-lite">
-                                    <TabsTrigger value="personal">Personal Information</TabsTrigger>
-                                    <TabsTrigger value="security">Security</TabsTrigger>
-                                </TabsList>
-                                <TabsContent value="personal">
-                                    <form onSubmit={console.log("personal information")}>
-                                        <div className="grid gap-6">
-                                            <div className="grid gap-2">
-                                                <Label htmlFor="name">Name</Label>
-                                                <Input id="name" placeholder="Your full name" className="border-grey bg-grey-lite" />
-                                            </div>
-                                            <div className="grid gap-2">
-                                                <Label htmlFor="email">Email</Label>
-                                                <Input id="email" type="email" placeholder="Your email address" className="border-grey bg-grey-lite" />
-                                            </div>
-                                            <div className="grid gap-2">
-                                                <Label htmlFor="location">Location</Label>
-                                                <Input id="location" placeholder="Your location" className="border-grey bg-grey-lite" />
-                                            </div>
-                                        </div>
-                                        <Button type="submit" className="mt-6 bg-brand-primary-blue">Save Changes</Button>
-                                    </form>
-                                </TabsContent>
-                                <TabsContent value="security">
-                                    <form onSubmit={console.log("update password")} className="space-y-6">
-                                        <div className="grid gap-2">
-                                            <Label htmlFor="current-password">Current Password</Label>
-                                            <Input id="current-password" type="password" className="border-grey bg-grey-lite" />
-                                        </div>
-                                        <div className="grid gap-2">
-                                            <Label htmlFor="new-password">New Password</Label>
-                                            <Input id="new-password" type="password" className="border-grey bg-grey-lite" />
-                                        </div>
-                                        <div className="grid gap-2">
-                                            <Label htmlFor="confirm-password">Confirm New Password</Label>
-                                            <Input id="confirm-password" type="password" className="border-grey bg-grey-lite" />
-                                        </div>
-                                        <Button type="submit" className="bg-brand-primary-blue">Update Password</Button>
-                                    </form>
-
-                                    <div className="mt-10 pt-6 border-t border-gray-700">
-                                        <h3 className="text-lg font-semibold mb-4">Delete Account</h3>
-                                        <p className="text-sm text-gray-400 mb-4">
-                                            Once you delete your account, there is no going back. Please be certain.
-                                        </p>
-                                        <AlertDialog>
-                                            <AlertDialogTrigger asChild>
-                                                <Button variant="destructive">Delete Account</Button>
-                                            </AlertDialogTrigger>
-                                            <AlertDialogContent className="bg-gray-800 text-white">
-                                                <AlertDialogHeader>
-                                                    <AlertDialogTitle>Are you absolutely sure?</AlertDialogTitle>
-                                                    <AlertDialogDescription className="text-gray-400">
-                                                        This action cannot be undone. This will permanently delete your
-                                                        account and remove your data from our servers.
-                                                    </AlertDialogDescription>
-                                                </AlertDialogHeader>
-                                                <AlertDialogFooter>
-                                                    <AlertDialogCancel className="bg-gray-700 text-white hover:bg-gray-600">Cancel</AlertDialogCancel>
-                                                    <AlertDialogAction onClick={console.log("delete account")} className="bg-red-600 hover:bg-red-700">
-                                                        Yes, delete my account
-                                                    </AlertDialogAction>
-                                                </AlertDialogFooter>
-                                            </AlertDialogContent>
-                                        </AlertDialog>
-                                    </div>
-                                </TabsContent>
-                            </Tabs>
-                        </CardContent>
-                    </Card>
+                    <AccountSettings id={user._id}/>
                 </div>
             </div>
         </main>

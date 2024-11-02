@@ -19,7 +19,7 @@ import { useEffect } from "react"
 import { useContextProvider } from "../reducer"
 
 const EditUrl = ({ urlStatus, expiresAt, urlId }) => {
-    const { UpdateShortUrl } = useContextProvider()
+    const { UpdateShortUrl, loading } = useContextProvider()
     const formSchema = z.object({
         expiresAt: z.date().optional(),
         urlStatus: z.string().optional()
@@ -81,7 +81,9 @@ const EditUrl = ({ urlStatus, expiresAt, urlId }) => {
                             }
                         />
                         <DialogFooter>
-                            <Button type="submit" className="bg-brand-primary-blue mt-6">Save changes</Button>
+                            <Button type="submit" className="bg-brand-primary-blue mt-6" disabled={loading}>
+                                {loading ? "Saving..." : "Save changes"}
+                            </Button>
                         </DialogFooter>
                     </form>
                 </Form>

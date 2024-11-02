@@ -34,11 +34,13 @@ const LinksPage = () => {
 
       <div className="mt-12">
         {
-          filteredUrlData && filteredUrlData.length > 0
+          Array.isArray(filteredUrlData) && filteredUrlData.length > 0
             ? filteredUrlData.map((item) => (
               <MyLinks key={item._id} {...item} />
             ))
-            : <h1 className="text-center text-expired-link text-2xl my-8">{filteredUrlData.message}</h1>
+            : <h1 className="text-center text-expired-link text-2xl my-8">
+              {filteredUrlData.message || "...Oops No URLs Found"}
+            </h1>
         }
       </div>
     </main>

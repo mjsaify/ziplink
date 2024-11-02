@@ -7,11 +7,8 @@ import { BASE_URL } from "../utils/_constants";
 export const AppContext = createContext();
 
 const AppContextProvider = ({ children }) => {
-    const [isAuthenticated, setIsAuthenticated] = useState(
-        localStorage.getItem("isAuthenticated") === "true" ? true : false
-    );
+    const [isAuthenticated, setIsAuthenticated] = useState(localStorage.getItem("isAuthenticated") === "true" ? true : false);
     const [user, setUser] = useState({});
-    const [location, setLocation] = useState({});
     const [urlData, setUrlData] = useState([]);
     const [singleUrlData, setSingleUrlData] = useState({})
     const [refetch, setRefetch] = useState(false);
@@ -32,11 +29,13 @@ const AppContextProvider = ({ children }) => {
             });
             const response = await request.json();
             if (!response.success) {
+                setLoading(false)
                 return toast({
                     title: response.error,
                 });
             }
             setRefetch(!refetch);
+            setLoading(true)
             toast({
                 title: response.message
             });
@@ -49,6 +48,7 @@ const AppContextProvider = ({ children }) => {
 
     const UpdateShortUrl = async (url, urlId) => {
         try {
+            setLoading(true)
             const request = await fetch(`${BASE_URL}/api/url/links/${urlId}`, {
                 method: "PUT",
                 headers: {
@@ -59,11 +59,13 @@ const AppContextProvider = ({ children }) => {
             });
             const response = await request.json();
             if (!response.success) {
+                setLoading(false)
                 return toast({
                     title: response.message
                 });
             };
             setRefetch(!refetch);
+            setLoading(false)
             toast({
                 title: response.message
             });
@@ -132,6 +134,7 @@ const AppContextProvider = ({ children }) => {
     };
 
     const LoginUser = async (formData) => {
+        setLoading(true)
         try {
             const request = await fetch(`${BASE_URL}/api/login`, {
                 method: "post",
@@ -142,8 +145,7 @@ const AppContextProvider = ({ children }) => {
                 credentials: 'include'
             });
             const response = await request.json();
-            console.log(response)
-            setLocation(response.location);
+            setLoading(false)
             return response;
         } catch (error) {
             console.log(error)
@@ -175,7 +177,7 @@ const AppContextProvider = ({ children }) => {
         }
     };
 
-    const GetUserDetails = async () =>{
+    const GetUserDetails = async () => {
         try {
             const request = await fetch(`${BASE_URL}/api/user`, {
                 method: "GET",
@@ -185,7 +187,7 @@ const AppContextProvider = ({ children }) => {
                 credentials: "include"
             });
             const response = await request.json();
-            if(!response.success){
+            if (!response.success) {
                 return toast({
                     title: "Failed to fetch user"
                 });
@@ -194,10 +196,59 @@ const AppContextProvider = ({ children }) => {
         } catch (error) {
             console.log(error)
         }
+    };
+
+    const UpdateUserDetails = async (formData, id) => {
+        try {
+            setLoading(true)
+            const request = await fetch(`${BASE_URL}/api/user/update/${id}`, {
+                method: "PUT",
+                headers: {
+                    "Content-type": "application/json"
+                },
+                body: JSON.stringify(formData),
+                credentials: "include"
+            });
+
+            const response = await request.json();
+            setLoading(false)
+            return response;
+        } catch (error) {
+            console.log(error);
+            toast({
+                title: "Could Not update profile"
+            })
+        }
     }
+
+
+    const UpdatePassword = async (formData, id) => {
+        setLoading(true)
+        try {
+            const request = await fetch(`${BASE_URL}/api/user/update/password/${id}`, {
+                method: "PUT",
+                headers: {
+                    "Content-type": "application/json"
+                },
+                body: JSON.stringify(formData),
+                credentials: "include"
+            });
+
+            const response = await request.json();
+            setLoading(false)
+            return response;
+        } catch (error) {
+            console.log(error);
+            toast({
+                title: "Could Not update profile"
+            })
+        }
+    }
+
 
     const GetSingleUrl = async (_id) => {
         try {
+            setLoading(true)
             const request = await fetch(`${BASE_URL}/api/url/links/${_id}`, {
                 method: "GET",
                 headers: {
@@ -207,10 +258,12 @@ const AppContextProvider = ({ children }) => {
             });
             const response = await request.json();
             if (!response.success) {
+                setLoading(false)
                 return toast({
                     title: response.error,
                 })
             };
+            setLoading(false)
             setSingleUrlData(response.url);
         } catch (error) {
             setError(error.message);
@@ -219,7 +272,7 @@ const AppContextProvider = ({ children }) => {
 
     const DownloadQrCode = async (_id) => {
         try {
-            const request = await fetch(`${BASE_URL}/api/url/links/download/${_id}`,{
+            const request = await fetch(`${BASE_URL}/api/url/links/download/${_id}`, {
                 method: "GET",
                 headers: {
                     "Content-type": "application/json"
@@ -235,6 +288,31 @@ const AppContextProvider = ({ children }) => {
             return response;
         } catch (error) {
             setError(error.message);
+        }
+    };
+
+    const DeleteUserAccount = async (id) => {
+        try {
+            setLoading(true)
+            const request = await fetch(`${BASE_URL}/api/user/delete/${id}`, {
+                method: "POST",
+                headers: {
+                    "Content-type": "application/json"
+                },
+                credentials: "include"
+            });
+            const response = await request.json();
+            if (!response.success) {
+                setLoading(true)
+                return toast({
+                    title: response.message,
+                })
+            };
+            setLoading(false)
+            return response;
+        } catch (error) {
+            console.log(error);
+            return error;
         }
     }
 
@@ -253,7 +331,7 @@ const AppContextProvider = ({ children }) => {
                 if (!response.success) {
                     setError(response.message);
                 }
-                setUrlData(response);
+                setUrlData(response.url);
                 setLoading(false);
             };
             GetUrlData();
@@ -263,7 +341,7 @@ const AppContextProvider = ({ children }) => {
     }, [refetch]);
 
     return (
-        <AppContext.Provider value={{ GenerateShortUri, SignupUser, LoginUser, LogoutUser, GetUserDetails, GetSingleUrl, UpdateShortUrl, DeleteUri, DownloadQrCode, location, user, singleUrlData, isAuthenticated, setIsAuthenticated, setRefetch, refetch, urlData, loading, error }}>
+        <AppContext.Provider value={{ GenerateShortUri, SignupUser, LoginUser, LogoutUser, UpdateUserDetails, UpdatePassword, DeleteUserAccount, GetUserDetails, GetSingleUrl, UpdateShortUrl, DeleteUri, DownloadQrCode, location, user, singleUrlData, isAuthenticated, setIsAuthenticated, setRefetch, refetch, urlData, loading, error }}>
             {children}
         </AppContext.Provider>
     )

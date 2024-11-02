@@ -19,15 +19,16 @@ const Signup = () => {
     const navigate = useNavigate();
     const onSubmit = async (data) => {
         await SignupUser(data);
+        navigate("/login")
     };
 
     useEffect(()=>{
         if(isAuthenticated){
             navigate("/links")
         }
-    },[])
+    },[]);
     return (
-        <div className="flex items-center justify-center my-12">
+        <div className="flex items-center justify-center mb-12">
             <div className="w-full max-w-md p-8 space-y-8 bg-[#181e29] rounded-xl shadow-2xl">
                 <div className="text-center">
                     <h1 className="text-3xl font-bold text-white">Create an Account</h1>

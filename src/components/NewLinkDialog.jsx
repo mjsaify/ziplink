@@ -17,7 +17,7 @@ import { useContextProvider } from "../reducer"
 
 const NewLinkDialog = () => {
     const { register, formState: { errors }, handleSubmit } = useForm({ resolver: zodResolver(UrlSchema) });
-    const { GenerateShortUri } = useContextProvider();
+    const { GenerateShortUri, loading } = useContextProvider();
 
     const onSubmit = async (data) => {
         await GenerateShortUri(data);
@@ -70,7 +70,9 @@ const NewLinkDialog = () => {
                             />
                         </div>
                         <DialogFooter>
-                            <Button className="bg-brand-primary-blue text-white">Create</Button>
+                            <Button className="bg-brand-primary-blue text-white" disabled={loading}>
+                                {loading ? "Generating..." : "Generate"}
+                            </Button>
                         </DialogFooter>
                     </div>
                 </form>

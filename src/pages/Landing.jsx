@@ -11,7 +11,7 @@ import {
     TableRow,
 } from "@/components/ui/table";
 import { TiArrowUnsorted } from "react-icons/ti"
-import qrcode from '../../public/img/qrcode.webp'
+import qrcode from '../assets/img/qrcode.jpg'
 
 
 const Landing = () => {

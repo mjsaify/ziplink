@@ -13,7 +13,7 @@ import DownloadQrCodeButon from "../components/DownloadQrCodeButon";
 import { toast } from "../hooks/use-toast";
 
 const SingleUrl = () => {
-    const { GetSingleUrl, singleUrlData, setRefetch, refetch, DeleteUri, DownloadQrCode } = useContextProvider();
+    const { GetSingleUrl, singleUrlData, setRefetch, refetch, DeleteUri, DownloadQrCode, loading } = useContextProvider();
     const { urlId } = useParams();
     const navigate = useNavigate();
 
@@ -119,50 +119,7 @@ const SingleUrl = () => {
                     </Card>
                 </div>
             </div>
-            <div className="my-8">
-                <h1 className="text-2xl text-white">Analytics Over Time</h1>
-                <p className="text-white">Show Graph here</p>
-            </div>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mt-12">
-                {/* <Card className="bg-grey text-white border-grey-lite">
-                    <CardHeader>
-                        <CardTitle>Top Referrers</CardTitle>
-                    </CardHeader>
-                    <CardContent>
-                        <ul className="space-y-2">
-                            <li className="flex justify-between items-center">
-                                <span>Google</span>
-                                <span className="text-sm text-white">40%</span>
-                            </li>
-                        </ul>
-                    </CardContent>
-                </Card> */}
-                {/* <Card className="bg-grey text-white border-grey-lite">
-                    <CardHeader>
-                        <CardTitle>Most Scanned Links</CardTitle>
-                    </CardHeader>
-                    <CardContent>
-                        <ul className="space-y-2">
-                            <li className="flex justify-between items-center">
-                                <span>Homepage</span>
-                                <span className="text-sm text-white">150 scans</span>
-                            </li>
-                        </ul>
-                    </CardContent>
-                </Card> */}
-                <Card className="bg-grey text-white border-grey-lite">
-                    <CardHeader>
-                        <CardTitle>Clicks by Country</CardTitle>
-                    </CardHeader>
-                    <CardContent>
-                        <ul className="space-y-2">
-                            <li className="flex justify-between items-center">
-                                <span>United States</span>
-                                <span className="text-sm text-white">800 clicks</span>
-                            </li>
-                        </ul>
-                    </CardContent>
-                </Card>
                 <Card className="bg-grey text-white border-grey-lite">
                     <CardHeader>
                         <CardTitle>QR Code Scans by Platform</CardTitle>
@@ -179,9 +136,9 @@ const SingleUrl = () => {
             </div>
             <div className="pt-6 flex justify-between">
                 <EditUrl urlStatus={singleUrlData.urlStatus} expiresAt={singleUrlData.expiresAt} urlId={urlId} />
-                <Button variant="destructive" onClick={handleDeleteUrl}>
+                <Button variant="destructive" onClick={handleDeleteUrl} disabled={loading}>
                     <Trash2 className="h-4 w-4 mr-2" />
-                    Delete URL
+                    {loading ? "Deleting...": "Delete URL"}
                 </Button>
             </div>
         </main>

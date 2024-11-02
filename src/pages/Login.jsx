@@ -17,7 +17,7 @@ const Login = () => {
             password: "123456"
         }, resolver: zodResolver(LoginSchema)
     });
-    const { LoginUser, setIsAuthenticated, isAuthenticated, refetch, setRefetch } = useContextProvider();
+    const { LoginUser, setIsAuthenticated, isAuthenticated, refetch, setRefetch, loading } = useContextProvider();
     const navigate = useNavigate();
 
     const onSubmit = async (data) => {
@@ -45,7 +45,7 @@ const Login = () => {
     },[isAuthenticated, navigate])
 
     return (
-        <div className="flex justify-center">
+        <div className="flex justify-center mb-12">
             <div className="w-full max-w-md p-8 space-y-8 bg-[#181e29] rounded-xl shadow-2xl">
                 <div className="text-center">
                     <h1 className="text-3xl font-bold text-white">Login Now</h1>
@@ -84,8 +84,8 @@ const Login = () => {
                         </div>
                         {errors.password && <p className='text-red-500 my-0'>{errors.password?.message}</p>}
                     </div>
-                    <Button className="w-full bg-[#144EE3] hover:bg-[#144EE3]/90 text-white">
-                        Login
+                    <Button className="w-full bg-[#144EE3] hover:bg-[#144EE3]/90 text-white" disabled={loading}>
+                        { loading ? "Please wait..." : "Login"}
                         <ArrowRight className="ml-2" size={18} />
                     </Button>
                 </form>

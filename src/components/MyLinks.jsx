@@ -2,13 +2,25 @@
 import { Copy, Download } from "lucide-react"
 import { Link } from "react-router-dom"
 import { FormatDateandTime, handleCopyToClipboard } from "../utils";
+import fileDownload from "js-file-download";
+import { useContextProvider } from "../reducer";
 
 const MyLinks = (props) => {
-    const { _id, shortUrl, originalUrl, createdAt, qrCode: { qrCodeImage }, title } = props;
+    const { _id, shortUrl, originalUrl, createdAt, qrCode, title } = props;
+    const { DownloadQrCode } = useContextProvider();
+
+
+    const download = async (imageLink) => {
+        await DownloadQrCode(_id);
+
+        const request = await fetch(imageLink);
+        const response = await request.blob();
+        fileDownload(response, 'qrcode.jpeg');
+    };
     
     return (
         <div className="bg-grey p-4 my-4 mb-8 flex text-white border border-grey-lite rounded">
-            <img src={qrCodeImage} alt="" />
+            <img src={qrCode?.qrCodeImage} alt="" />
             <div className="w-full px-8">
                 <div className="flex justify-between">
                     <h1 className="font-semibold text-2xl">
@@ -16,7 +28,7 @@ const MyLinks = (props) => {
                     </h1>
                     <div className="flex gap-x-4">
                         <Copy className="cursor-pointer hover:text-brand-primary-blue" onClick={()=> handleCopyToClipboard(shortUrl)} />
-                        <Download className="cursor-pointer hover:text-brand-primary-blue" />
+                        <Download className="cursor-pointer hover:text-brand-primary-blue" onClick={()=> download()} />
                     </div>
                 </div>
                 <div className="mt-4">

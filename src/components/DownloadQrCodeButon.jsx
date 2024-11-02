@@ -5,7 +5,7 @@ import fileDownload from "js-file-download";
 
 
 const DownloadQrCodeButon = ({ DownloadQrCode, id, imageLink }) => {
-    const download = async (e, imageLink) => {
+    const download = async (imageLink) => {
         await DownloadQrCode(id);
 
         const request = await fetch(imageLink);
@@ -18,7 +18,7 @@ const DownloadQrCodeButon = ({ DownloadQrCode, id, imageLink }) => {
     return (
         <Button className="mt-2 bg-brand-primary-blue">
             <Download className="h-4 w-4" />
-            <a download={true} onClick={(e)=> download(e, imageLink)}>Download QR Code</a>
+            <a download={true} onClick={()=> download(imageLink)}>Download QR Code</a>
         </Button>
     )
 }
