@@ -12,21 +12,24 @@ import { useEffect } from "react";
 
 const Login = () => {
     const { register, handleSubmit, formState: { errors } } = useForm({ resolver: zodResolver(LoginSchema) });
-    const { LoginUser, setIsAuthenticated, isAuthenticated, refetch, setRefetch, loading } = useContextProvider();
+    const { LoginUser, setIsAuthenticated, isAuthenticated, refetch, setRefetch, setLoading, loading } = useContextProvider();
     const navigate = useNavigate();
 
     const onSubmit = async (data) => {
+        setLoading(true)
         // make api call
         const response = await LoginUser(data);
         if (response.success) {
             localStorage.setItem("isAuthenticated", response.success); // Save in localStorage
             setRefetch(!refetch)
             setIsAuthenticated(true);
+            setLoading(false)
             navigate("/links");
             toast({
                 title: response.message,
             });
         } else {
+            setLoading(false)
             toast({
                 title: response.message,
             });

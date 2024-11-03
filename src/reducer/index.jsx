@@ -1,5 +1,5 @@
 /* eslint-disable react/prop-types */
-import { createContext, useContext, useEffect, useState } from "react";
+import { createContext, useContext, useState } from "react";
 import { useToast } from "@/hooks/use-toast";
 import { BASE_URL } from "../utils/_constants";
 
@@ -12,7 +12,7 @@ const AppContextProvider = ({ children }) => {
     const [urlData, setUrlData] = useState([]);
     const [singleUrlData, setSingleUrlData] = useState({})
     const [refetch, setRefetch] = useState(false);
-    const [loading, setLoading] = useState(true);
+    const [loading, setLoading] = useState(false );
     const [error, setError] = useState(null);
     const { toast } = useToast();
 
@@ -315,32 +315,10 @@ const AppContextProvider = ({ children }) => {
         }
     }
 
-    useEffect(() => {
-        try {
-            setLoading(true)
-            async function GetUrlData() {
-                const request = await fetch(`${BASE_URL}/api/url`, {
-                    method: "GET",
-                    headers: {
-                        "Content-type": "application/json"
-                    },
-                    credentials: 'include'
-                });
-                const response = await request.json();
-                if (!response.success) {
-                    setError(response.message);
-                }
-                setUrlData(response.url);
-                setLoading(false);
-            };
-            GetUrlData();
-        } catch (error) {
-            console.log(error)
-        }
-    }, [refetch]);
+
 
     return (
-        <AppContext.Provider value={{ GenerateShortUri, SignupUser, LoginUser, LogoutUser, UpdateUserDetails, UpdatePassword, DeleteUserAccount, GetUserDetails, GetSingleUrl, UpdateShortUrl, DeleteUri, DownloadQrCode, location, user, singleUrlData, isAuthenticated, setIsAuthenticated, setRefetch, refetch, urlData, loading, error }}>
+        <AppContext.Provider value={{ GenerateShortUri, SignupUser, LoginUser, LogoutUser, UpdateUserDetails, UpdatePassword, DeleteUserAccount, GetUserDetails, GetSingleUrl, UpdateShortUrl, DeleteUri, DownloadQrCode, location, user, singleUrlData, isAuthenticated, setIsAuthenticated, setRefetch, refetch, setUrlData, urlData, setLoading, loading, error }}>
             {children}
         </AppContext.Provider>
     )

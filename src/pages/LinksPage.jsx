@@ -4,10 +4,12 @@ import MyLinks from "../components/MyLinks"
 import { useContextProvider } from "../reducer"
 import NewLinkDialog from "../components/NewLinkDialog"
 import { useEffect, useState } from "react"
+import { toast } from "../hooks/use-toast"
+import { BASE_URL } from "../utils/_constants"
 
 
 const LinksPage = () => {
-  const { urlData, refetch } = useContextProvider();
+  const { urlData, refetch, setLoading, setUrlData } = useContextProvider();
   const [filteredUrlData, setFilteredUrlData] = useState(urlData);
 
   const handleChange = (e) => {
@@ -16,6 +18,34 @@ const LinksPage = () => {
     });
     setFilteredUrlData(filterdItems);
   };
+
+  useEffect(() => {
+    try {
+      setLoading(true)
+      async function GetUrlData() {
+        const request = await fetch(`${BASE_URL}/api/url`, {
+          method: "GET",
+          headers: {
+            "Content-type": "application/json"
+          },
+          credentials: 'include'
+        });
+        const response = await request.json();
+        console.log(response)
+        if (!response.success) {
+          toast({
+            title: response.message,
+          })
+        }
+        setUrlData(response.url);
+        setLoading(false);
+      };
+      GetUrlData();
+    } catch (error) {
+      console.log(error)
+    }
+  }, [refetch]);
+
 
   useEffect(() => {
     setFilteredUrlData(urlData)
