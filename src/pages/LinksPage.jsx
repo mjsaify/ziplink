@@ -39,7 +39,7 @@ const LinksPage = () => {
               <MyLinks key={item._id} {...item} />
             ))
             : <h1 className="text-center text-expired-link text-2xl my-8">
-              {filteredUrlData.message || "...Oops No URLs Found"}
+              {filteredUrlData?.message}
             </h1>
         }
       </div>

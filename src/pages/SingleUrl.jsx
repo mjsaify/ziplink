@@ -119,21 +119,6 @@ const SingleUrl = () => {
                     </Card>
                 </div>
             </div>
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mt-12">
-                <Card className="bg-grey text-white border-grey-lite">
-                    <CardHeader>
-                        <CardTitle>QR Code Scans by Platform</CardTitle>
-                    </CardHeader>
-                    <CardContent>
-                        <ul className="space-y-2">
-                            <li className="flex justify-between items-center">
-                                <span>Android</span>
-                                <span className="text-sm text-white">200 scans</span>
-                            </li>
-                        </ul>
-                    </CardContent>
-                </Card>
-            </div>
             <div className="pt-6 flex justify-between">
                 <EditUrl urlStatus={singleUrlData.urlStatus} expiresAt={singleUrlData.expiresAt} urlId={urlId} />
                 <Button variant="destructive" onClick={handleDeleteUrl} disabled={loading}>
