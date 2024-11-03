@@ -142,7 +142,6 @@ const AppContextProvider = ({ children }) => {
                     'Content-type': 'application/json',
                 },
                 body: JSON.stringify(formData),
-                credentials: 'include'
             });
             const response = await request.json();
             setLoading(false)
