@@ -7,7 +7,7 @@ import { useContextProvider } from "../reducer";
 
 const MyLinks = (props) => {
     const { _id, shortUrl, originalUrl, createdAt, qrCode, title } = props;
-    const { DownloadQrCode } = useContextProvider();
+    const { DownloadQrCode, loading } = useContextProvider();
 
 
     const download = async (imageLink) => {
@@ -17,6 +17,10 @@ const MyLinks = (props) => {
         const response = await request.blob();
         fileDownload(response, 'qrcode.jpeg');
     };
+
+    if(loading){
+        return <h1 className="text-center text-2xl">Loading Urls...</h1>
+    }
     
     return (
         <div className="bg-grey p-4 my-4 mb-8 flex text-white border border-grey-lite rounded">

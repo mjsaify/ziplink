@@ -11,12 +11,7 @@ import { toast } from "../hooks/use-toast";
 import { useEffect } from "react";
 
 const Login = () => {
-    const { register, handleSubmit, formState: { errors } } = useForm({
-        defaultValues: {
-            email: "john@gmail.com",
-            password: "123456"
-        }, resolver: zodResolver(LoginSchema)
-    });
+    const { register, handleSubmit, formState: { errors } } = useForm({ resolver: zodResolver(LoginSchema) });
     const { LoginUser, setIsAuthenticated, isAuthenticated, refetch, setRefetch, loading } = useContextProvider();
     const navigate = useNavigate();
 
@@ -38,11 +33,11 @@ const Login = () => {
         };
     };
 
-    useEffect(()=>{
-        if(isAuthenticated){
+    useEffect(() => {
+        if (isAuthenticated) {
             navigate("/links")
         }
-    },[isAuthenticated, navigate])
+    }, [isAuthenticated, navigate])
 
     return (
         <div className="flex justify-center mb-12">
@@ -85,7 +80,7 @@ const Login = () => {
                         {errors.password && <p className='text-red-500 my-0'>{errors.password?.message}</p>}
                     </div>
                     <Button className="w-full bg-[#144EE3] hover:bg-[#144EE3]/90 text-white" disabled={loading}>
-                        { loading ? "Please wait..." : "Login"}
+                        {loading ? "Please wait..." : "Login"}
                         <ArrowRight className="ml-2" size={18} />
                     </Button>
                 </form>

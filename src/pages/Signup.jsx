@@ -10,11 +10,7 @@ import { SignupSchema } from '../utils/_types';
 import { useEffect } from "react";
 
 const Signup = () => {
-    const { register, handleSubmit, formState: { errors } } = useForm({ defaultValues: {
-        fullname: "john doe",
-        email: "john@gmail.com",
-        password: "123456"
-    }, resolver: zodResolver(SignupSchema) });
+    const { register, handleSubmit, formState: { errors } } = useForm({ resolver: zodResolver(SignupSchema) });
     const { SignupUser, isAuthenticated } = useContextProvider();
     const navigate = useNavigate();
     const onSubmit = async (data) => {
