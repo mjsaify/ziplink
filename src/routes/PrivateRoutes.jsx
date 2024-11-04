@@ -26,6 +26,7 @@ export const PrivateRoutes = ({ children }) => {
                     localStorage.setItem("isAuthenticated", isAuthenticated);
                 } else {
                     setIsAuthenticated(false);
+                    localStorage.removeItem("isAuthenticated");
                     navigate("/login");
                 }
             } catch (error) {
