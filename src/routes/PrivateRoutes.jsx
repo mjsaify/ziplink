@@ -6,13 +6,17 @@ import { useEffect } from "react";
 
 
 export const PrivateRoutes = ({ children }) => {
-    const navigate = useNavigate();
     const { isAuthenticated, setIsAuthenticated } = useContextProvider();
+    const navigate = useNavigate();
 
     useEffect(() => {
         async function CheckAuthSession() {
             try {
                 const request = await fetch(`${import.meta.env.VITE_SERVER_URI}/api/auth/check-session`, {
+                    method: 'GET',
+                    headers: {
+                        "Content-type": "application/json"
+                    },
                     credentials: "include", // Include cookies for session check
                 });
 

@@ -11,7 +11,10 @@ import { toast } from "../hooks/use-toast";
 import { useEffect } from "react";
 
 const Login = () => {
-    const { register, handleSubmit, formState: { errors } } = useForm({ resolver: zodResolver(LoginSchema) });
+    const { register, handleSubmit, formState: { errors } } = useForm({ defaultValues: {
+        email: "jack@gmail.com",
+        password: "123456"
+    }, resolver: zodResolver(LoginSchema) });
     const { LoginUser, setIsAuthenticated, isAuthenticated, refetch, setRefetch, setLoading, loading } = useContextProvider();
     const navigate = useNavigate();
 
@@ -19,18 +22,19 @@ const Login = () => {
         setLoading(true)
         // make api call
         const response = await LoginUser(data);
+        console.log(response)
         if (response.success) {
             localStorage.setItem("isAuthenticated", response.success); // Save in localStorage
             setRefetch(!refetch)
             setIsAuthenticated(true);
             setLoading(false)
             navigate("/links");
-            toast({
+            return toast({
                 title: response.message,
             });
         } else {
             setLoading(false)
-            toast({
+            return toast({
                 title: response.message,
             });
         };

@@ -1,3 +1,4 @@
+/* eslint-disable react-refresh/only-export-components */
 /* eslint-disable react/prop-types */
 import { createContext, useContext, useState } from "react";
 import { useToast } from "@/hooks/use-toast";
@@ -134,7 +135,6 @@ const AppContextProvider = ({ children }) => {
     };
 
     const LoginUser = async (formData) => {
-        setLoading(true)
         try {
             const request = await fetch(`${BASE_URL}/api/login`, {
                 method: "post",
@@ -142,9 +142,10 @@ const AppContextProvider = ({ children }) => {
                     'Content-type': 'application/json',
                 },
                 body: JSON.stringify(formData),
+                credentials: 'include'
             });
             const response = await request.json();
-            setLoading(false)
+            console.log(response)
             return response;
         } catch (error) {
             console.log(error)
@@ -314,8 +315,6 @@ const AppContextProvider = ({ children }) => {
             return error;
         }
     }
-
-
 
     return (
         <AppContext.Provider value={{ GenerateShortUri, SignupUser, LoginUser, LogoutUser, UpdateUserDetails, UpdatePassword, DeleteUserAccount, GetUserDetails, GetSingleUrl, UpdateShortUrl, DeleteUri, DownloadQrCode, location, user, singleUrlData, isAuthenticated, setIsAuthenticated, setRefetch, refetch, setUrlData, urlData, setLoading, loading, error }}>

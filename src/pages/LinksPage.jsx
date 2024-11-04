@@ -31,7 +31,6 @@ const LinksPage = () => {
           credentials: 'include'
         });
         const response = await request.json();
-        console.log(response)
         if (!response.success) {
           toast({
             title: response.message,
