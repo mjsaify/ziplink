@@ -21,6 +21,7 @@ export const PrivateRoutes = ({ children }) => {
                 });
 
                 const response = await request.json();
+                console.log(response)
                 if (response.success) {
                     setIsAuthenticated(true);
                     localStorage.setItem("isAuthenticated", isAuthenticated);
