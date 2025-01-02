@@ -12,8 +12,8 @@ import { useEffect } from "react";
 
 const Login = () => {
     const { register, handleSubmit, formState: { errors } } = useForm({ defaultValues: {
-        email: "jack@gmail.com",
-        password: "123456"
+        email: "john@example.com",
+        password: "Hello@123"
     }, resolver: zodResolver(LoginSchema) });
     const { LoginUser, setIsAuthenticated, isAuthenticated, refetch, setRefetch, setLoading, loading } = useContextProvider();
     const navigate = useNavigate();

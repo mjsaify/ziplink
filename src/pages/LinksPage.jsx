@@ -31,12 +31,12 @@ const LinksPage = () => {
           credentials: 'include'
         });
         const response = await request.json();
-        if (!response.success) {
-          toast({
-            title: response.message,
-          })
-        }
-        setUrlData(response.url);
+        if(!response.success){
+          return toast({
+            title: response.message
+          });
+        };
+        setUrlData(response.urls.url);
         setLoading(false);
       };
       GetUrlData();
@@ -44,7 +44,6 @@ const LinksPage = () => {
       console.log(error)
     }
   }, [refetch]);
-
 
   useEffect(() => {
     setFilteredUrlData(urlData)

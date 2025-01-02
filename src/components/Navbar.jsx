@@ -14,6 +14,7 @@ const Navbar = () => {
     if (response.success) {
       setIsAuthenticated(false)
       localStorage.removeItem("isAuthenticated");
+      localStorage.removeItem("token");
       navigate("/login");
     }
   }

@@ -145,7 +145,6 @@ const AppContextProvider = ({ children }) => {
                 credentials: 'include'
             });
             const response = await request.json();
-            console.log(response)
             return response;
         } catch (error) {
             console.log(error)
@@ -167,6 +166,7 @@ const AppContextProvider = ({ children }) => {
                 credentials: 'include'
             });
             const response = await request.json();
+            
             return response;
         } catch (error) {
             console.log(error)
